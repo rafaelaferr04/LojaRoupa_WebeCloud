@@ -56,9 +56,11 @@
 
 .hero-actions {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-wrap: nowrap;
+  gap: clamp(8px, 2vw, 12px);
+  justify-content: flex-start;
   margin-top: 32px;
+  max-width: min(100%, 376px);
 }
 
 .hero-actions a,
@@ -68,15 +70,18 @@
   color: #1c1510;
   background: #bc8a4a;
   display: inline-flex;
-  font-size: 0.78rem;
+  font-size: clamp(0.62rem, 2.8vw, 0.78rem);
   font-weight: 800;
+  flex: 1 1 0;
   justify-content: center;
   letter-spacing: 0.08rem;
   min-height: 44px;
-  padding: 0 18px;
+  min-width: 0;
+  padding: 0 clamp(8px, 3vw, 18px);
   text-decoration: none;
   text-transform: uppercase;
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+  white-space: nowrap;
 }
 
 .hero-actions a:last-child {
@@ -108,18 +113,27 @@
 
 .collection-section,
 .product-section {
-  padding: 72px var(--page-gutter);
+  padding: 72px 0;
   text-align: left;
 }
 
 .summer-collections {
   background: #f5f0e6;
   border-bottom: 1px solid #e0d5c4;
+  padding-left: clamp(12px, 3vw, 36px);
+  padding-right: clamp(12px, 3vw, 36px);
 }
 
 .section-heading {
   margin: 0 auto 30px;
   max-width: var(--content-width);
+}
+
+.product-section .section-heading {
+  box-sizing: border-box;
+  max-width: 100%;
+  padding-left: clamp(12px, 2vw, 24px);
+  padding-right: clamp(12px, 2vw, 24px);
 }
 
 .section-title-row {
@@ -329,14 +343,16 @@
 }
 
 .product-grid {
-  column-gap: clamp(16px, 2vw, 24px);
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  row-gap: clamp(22px, 3vw, 34px);
+  column-gap: 0;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 100%;
+  row-gap: 0;
 }
 
 .summer-grid {
-  gap: clamp(10px, 2vw, 22px);
+  gap: 0;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  max-width: 100%;
 }
 
 .summer-card {
@@ -350,7 +366,7 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  min-height: clamp(260px, 34vw, 380px);
+  min-height: clamp(210px, 32vw, 380px);
   overflow: hidden;
   padding: clamp(14px, 2.2vw, 26px);
   position: relative;
@@ -375,7 +391,7 @@
 
 .summer-card span {
   color: #bc8a4a;
-  font-size: clamp(0.58rem, 1.2vw, 0.78rem);
+  font-size: clamp(0.52rem, 1.15vw, 0.78rem);
   font-weight: 800;
   letter-spacing: clamp(0.04rem, 0.7vw, 0.12rem);
   text-transform: uppercase;
@@ -384,7 +400,7 @@
 .summer-card h3 {
   color: #fffaf0;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: clamp(1.05rem, 3vw, 2.6rem);
+  font-size: clamp(0.95rem, 2.8vw, 2.6rem);
   font-weight: 500;
   line-height: 1.04;
   margin: clamp(6px, 1.2vw, 10px) 0 clamp(7px, 1.4vw, 12px);
@@ -393,7 +409,7 @@
 
 .summer-card p {
   color: #d9d1c3;
-  font-size: clamp(0.76rem, 1.45vw, 1rem);
+  font-size: clamp(0.68rem, 1.35vw, 1rem);
   line-height: 1.45;
   margin: 0;
   overflow-wrap: anywhere;
@@ -474,7 +490,7 @@
 .product-card h3 {
   color: #1c1510;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 1.35rem;
+  font-size: clamp(0.95rem, 2vw, 1.35rem);
   font-weight: 500;
   margin: 0 0 12px;
 }
@@ -578,12 +594,12 @@
 }
 
 .product-info {
-  padding: 18px;
+  padding: clamp(10px, 1.6vw, 16px);
 }
 
 .product-category {
   color: #bc8a4a;
-  font-size: 0.72rem;
+  font-size: clamp(0.64rem, 1.4vw, 0.72rem);
   font-weight: 700;
   letter-spacing: 0.1rem;
   margin: 0 0 8px;
@@ -599,7 +615,7 @@
 
 .product-color {
   color: #726660;
-  font-size: 0.82rem;
+  font-size: clamp(0.64rem, 1.4vw, 0.82rem);
   margin: 0 0 10px;
 }
 
@@ -1222,12 +1238,17 @@
   }
 }
 
+@media (max-width: 620px) {
+  .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 760px) {
   .home-hero,
   .category-hero,
   .info-hero,
   .collection-section,
-  .product-section,
   .info-content {
     padding-left: 18px;
     padding-right: 18px;
@@ -1241,16 +1262,12 @@
     margin: 0;
   }
 
-  .hero-actions a {
-    width: 100%;
+  .hero-actions {
+    justify-content: center;
   }
 
   .summer-card {
-    min-height: 240px;
-  }
-
-  .product-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height: clamp(180px, 31vw, 240px);
   }
 
   .section-title-row {
@@ -1281,14 +1298,22 @@
   }
 }
 
+
 @media (max-width: 560px) {
   .summer-grid {
     grid-template-columns: 1fr;
   }
 
   .summer-card {
-    aspect-ratio: 16 / 11;
-    min-height: 250px;
+    aspect-ratio: 16 / 10;
+    min-height: clamp(190px, 54vw, 250px);
+  }
+}
+
+@media (max-width: 380px) {
+  .summer-card {
+    min-height: clamp(170px, 58vw, 210px);
+    padding: clamp(12px, 4vw, 18px);
   }
 }
 

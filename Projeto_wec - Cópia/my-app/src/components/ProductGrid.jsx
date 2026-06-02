@@ -54,8 +54,10 @@ function ProductGrid({ products, title = 'Comprar por destaque', path }) {
     scrollToProductsStart()
   }, [pageToShow])
 
+  const sectionClassName = `product-section${title === 'Destaques da semana' ? ' featured-products-section' : ''}`
+
   return (
-    <section className="product-section" id="produtos" aria-label="Produtos">
+    <section className={sectionClassName} id="produtos" aria-label="Produtos">
       <div className="section-heading">
         <p>Produtos selecionados</p>
         <div className="section-title-row">
