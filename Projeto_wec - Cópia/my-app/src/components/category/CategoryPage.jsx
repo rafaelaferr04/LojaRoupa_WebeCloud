@@ -58,7 +58,7 @@ function CategoryPage({ page }) {
   return (
     <>
       <Header />
-      <main className="page-shell">
+      <main className="page-shell category-page-shell">
         <section className="category-hero">
           <p>{page.eyebrow}</p>
           <h1>{page.title}</h1>
