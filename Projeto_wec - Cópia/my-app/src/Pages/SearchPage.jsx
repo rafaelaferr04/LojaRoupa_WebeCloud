@@ -43,7 +43,7 @@ function SearchPage() {
         <section className="category-hero">
           <p>Pesquisar</p>
           <h1>Pesquisar produtos</h1>
-          <span>Procure por nome, categoria, subcategoria ou descricao.</span>
+          <span>Procure por nome, categoria, subcategoria ou descrição.</span>
         </section>
 
         <section className="search-page">

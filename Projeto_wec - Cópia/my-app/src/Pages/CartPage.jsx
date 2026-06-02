@@ -44,7 +44,7 @@ function CartPage() {
         <section className="cart-page">
           {cart.length === 0 ? (
             <div className="empty-cart">
-              <h2>O carrinho esta vazio</h2>
+              <h2>O carrinho está vazio</h2>
               <Link to="/">Continuar a comprar</Link>
             </div>
           ) : (

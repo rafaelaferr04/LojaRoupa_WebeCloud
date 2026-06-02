@@ -1,4 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
+import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import MegaMenu from './MegaMenu.jsx'
 
@@ -17,8 +18,8 @@ export const navigationItems = [
           { label: 'T-shirts', path: '/homem/t-shirts' },
           { label: 'Sweatshirts e hoodies', path: '/homem/sweatshirts-e-hoodies' },
           { label: 'Polos', path: '/homem/polos' },
-          { label: 'Calcas', path: '/homem/calcas' },
-          { label: 'Calcoes', path: '/homem/calcoes' },
+          { label: 'Calças', path: '/homem/calcas' },
+          { label: 'Calções', path: '/homem/calcoes' },
         ],
       },
       {
@@ -32,14 +33,14 @@ export const navigationItems = [
         ],
       },
       {
-        title: 'Acessorios',
+        title: 'Acessórios',
         path: '/homem/acessorios',
         links: [
           { label: 'Malas de viagem', path: '/homem/malas-de-viagem' },
           { label: 'Carteiras', path: '/homem/carteiras' },
           { label: 'Cintos', path: '/homem/cintos' },
-          { label: 'Relogios', path: '/homem/relogios' },
-          { label: 'Oculos de sol', path: '/homem/oculos-de-sol' },
+          { label: 'Relógios', path: '/homem/relogios' },
+          { label: 'Óculos de sol', path: '/homem/oculos-de-sol' },
         ],
       },
     ],
@@ -57,7 +58,7 @@ export const navigationItems = [
           { label: 'Camisas', path: '/mulher/camisas' },
           { label: 'Vestidos', path: '/mulher/vestidos' },
           { label: 'Saias', path: '/mulher/saias' },
-          { label: 'Calcas', path: '/mulher/calcas' },
+          { label: 'Calças', path: '/mulher/calcas' },
           { label: 'T-shirts', path: '/mulher/t-shirts' },
         ],
       },
@@ -75,18 +76,18 @@ export const navigationItems = [
         title: 'Malas e beleza',
         path: '/mulher/malas-e-beleza',
         links: [
-          { label: 'Malas de mao', path: '/mulher/malas-de-mao' },
+          { label: 'Malas de mão', path: '/mulher/malas-de-mao' },
           { label: 'Carteiras', path: '/mulher/carteiras' },
           { label: 'Joias', path: '/mulher/joias' },
           { label: 'Perfumes', path: '/mulher/perfumes' },
-          { label: 'Lencos', path: '/mulher/lencos' },
+          { label: 'Lenços', path: '/mulher/lencos' },
         ],
       },
     ],
   },
   {
     key: 'crianca',
-    label: 'Crianca',
+    label: 'Criança',
     path: '/crianca',
     columns: [
       {
@@ -104,20 +105,20 @@ export const navigationItems = [
         title: 'Sapatos',
         path: '/crianca/sapatos',
         links: [
-          { label: 'Tenis', path: '/crianca/tenis' },
+          { label: 'Ténis', path: '/crianca/tenis' },
           { label: 'Sabrinas', path: '/crianca/sabrinas' },
           { label: 'Botas', path: '/crianca/botas' },
           { label: 'Galochas', path: '/crianca/galochas' },
         ],
       },
       {
-        title: 'Acessorios',
+        title: 'Acessórios',
         path: '/crianca/acessorios',
         links: [
           { label: 'Mochilas', path: '/crianca/mochilas' },
-          { label: 'Bones', path: '/crianca/bones' },
+          { label: 'Bonés', path: '/crianca/bones' },
           { label: 'Brinquedos', path: '/crianca/brinquedos' },
-          { label: 'Mantas de bebe', path: '/crianca/mantas-de-bebe' },
+          { label: 'Mantas de bebé', path: '/crianca/mantas-de-bebe' },
         ],
       },
     ],
@@ -133,12 +134,12 @@ export const navigationItems = [
         links: [
           { label: 'Roupa de cama', path: '/casa/roupa-de-cama' },
           { label: 'Toalhas', path: '/casa/toalhas' },
-          { label: 'Roupoes', path: '/casa/roupoes' },
+          { label: 'Roupões', path: '/casa/roupoes' },
           { label: 'Mantas', path: '/casa/mantas' },
         ],
       },
       {
-        title: 'Decoracao',
+        title: 'Decoração',
         path: '/casa/decoracao',
         links: [
           { label: 'Velas', path: '/casa/velas' },
@@ -151,9 +152,9 @@ export const navigationItems = [
         title: 'Mesa e bar',
         path: '/casa/mesa-e-bar',
         links: [
-          { label: 'Servico de mesa', path: '/casa/servico-de-mesa' },
+          { label: 'Serviço de mesa', path: '/casa/servico-de-mesa' },
           { label: 'Copos', path: '/casa/copos' },
-          { label: 'Acessorios de bar', path: '/casa/acessorios-de-bar' },
+          { label: 'Acessórios de bar', path: '/casa/acessorios-de-bar' },
         ],
       },
     ],
@@ -170,7 +171,7 @@ export const navigationItems = [
         links: [
           { label: 'Mulher', path: '/saldos/mulher' },
           { label: 'Homem', path: '/saldos/homem' },
-          { label: 'Crianca', path: '/saldos/crianca' },
+          { label: 'Criança', path: '/saldos/crianca' },
           { label: 'Casa', path: '/saldos/casa' },
         ],
       },
@@ -178,9 +179,9 @@ export const navigationItems = [
         title: 'Campanhas',
         path: '/saldos/campanhas',
         links: [
-          { label: 'Ultimas unidades', path: '/saldos/ultimas-unidades' },
-          { label: 'Ate 30%', path: '/saldos/ate-30por-cento' },
-          { label: 'Ate 50%', path: '/saldos/ate-50por-cento' },
+          { label: 'Últimas unidades', path: '/saldos/ultimas-unidades' },
+          { label: 'Até 30%', path: '/saldos/ate-30por-cento' },
+          { label: 'Até 50%', path: '/saldos/ate-50por-cento' },
           { label: 'Escolhas premium', path: '/saldos/escolhas-premium' },
         ],
       },
@@ -189,23 +190,42 @@ export const navigationItems = [
 ]
 
 function CategoryNavigation() {
+  const [activeKey, setActiveKey] = useState(null)
+  const activeItem = navigationItems.find((item) => item.key === activeKey)
+
+  const handleBlur = (event) => {
+    if (!event.currentTarget.contains(event.relatedTarget)) {
+      setActiveKey(null)
+    }
+  }
+
   return (
-    <nav className="categories-nav" aria-label="Categorias">
+    <nav
+      className="categories-nav"
+      aria-label="Categorias"
+      onBlur={handleBlur}
+      onMouseLeave={() => setActiveKey(null)}
+    >
       <ul>
         {navigationItems.map((item) => (
-          <li className="has-mega" key={item.path}>
+          <li
+            className="has-mega"
+            key={item.path}
+            onMouseEnter={() => setActiveKey(item.key)}
+          >
             <NavLink
               to={item.path}
+              onFocus={() => setActiveKey(item.key)}
               className={({ isActive }) =>
                 `${isActive ? 'active ' : ''}${item.destaque ? 'destaque' : ''}`.trim()
               }
             >
               {item.label}
             </NavLink>
-            <MegaMenu item={item} />
           </li>
         ))}
       </ul>
+      {activeItem && <MegaMenu item={activeItem} isOpen onLinkClick={() => setActiveKey(null)} />}
     </nav>
   )
 }

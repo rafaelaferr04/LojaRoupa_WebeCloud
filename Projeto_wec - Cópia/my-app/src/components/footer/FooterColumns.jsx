@@ -22,7 +22,7 @@ export function FooterColumns() {
             <Link to="/envios-e-entregas" onClick={handleFooterLinkClick}>Envios e Entregas</Link>
           </li>
           <li>
-            <Link to="/devolucoes" onClick={handleFooterLinkClick}>Devolucoes</Link>
+            <Link to="/devolucoes" onClick={handleFooterLinkClick}>Devoluções</Link>
           </li>
           <li>
             <Link to="/contacte-nos" onClick={handleFooterLinkClick}>Contacte-nos</Link>
@@ -34,7 +34,7 @@ export function FooterColumns() {
         <h4>A empresa</h4>
         <ul>
           <li>
-            <Link to="/a-nossa-historia" onClick={handleFooterLinkClick}>A Nossa Historia</Link>
+            <Link to="/a-nossa-historia" onClick={handleFooterLinkClick}>A Nossa História</Link>
           </li>
           <li>
             <Link to="/carreiras" onClick={handleFooterLinkClick}>Carreiras</Link>
@@ -69,11 +69,11 @@ export const footerPages = [
       },
       {
         title: 'Preparacao',
-        text: 'A nossa equipa prepara os artigos em 1 a 2 dias uteis e verifica tamanhos, quantidades e embalagem antes do envio.',
+        text: 'A nossa equipa prepara os artigos em 1 a 2 dias utéis e verifica tamanhos, quantidades e embalagem antes do envio.',
       },
       {
         title: 'Acompanhamento',
-        text: 'Quando a encomenda sai do armazem, enviamos a referencia de tracking para acompanhar a transportadora.',
+        text: 'Quando a encomenda sai do armazém, enviamos a referência de tracking para acompanhar a transportadora.',
       },
     ],
   },
@@ -85,35 +85,35 @@ export const footerPages = [
     sections: [
       {
         title: 'Prazos de entrega',
-        text: 'As encomendas standard sao preparadas em 1 a 2 dias uteis e entregues normalmente entre 2 e 5 dias uteis em Portugal continental.',
+        text: 'As encomendas standard sao preparadas em 1 a 2 dias utéis e entregues normalmente entre 2 e 5 dias utéis em Portugal continental.',
       },
       {
         title: 'Custos e entrega gratuita',
-        text: 'A entrega e gratuita em encomendas superiores a 150 EUR. Para valores inferiores, o custo e calculado no checkout antes da confirmacao.',
+        text: 'A entrega e gratuita em encomendas superiores a 150 EUR. Para valores inferiores, o custo e calculado no checkout antes da confirmação.',
       },
       {
         title: 'Acompanhamento',
-        text: 'Depois do envio, recebe um email com o estado da encomenda e a referencia de acompanhamento da transportadora.',
+        text: 'Depois do envio, recebe um email com o estado da encomenda e a referência de acompanhamento da transportadora.',
       },
     ],
   },
   {
-    path: '/devolucoes',
+    path: '/devoluções',
     eyebrow: 'Apoio ao cliente',
-    title: 'Devolucoes',
-    description: 'Pode devolver artigos que nao tenham sido usados e estejam na embalagem original.',
+    title: 'Devoluções',
+    description: 'Pode devolver artigos que não tenham sido usados e estejam na embalagem original.',
     sections: [
       {
-        title: 'Periodo de devolucao',
-        text: 'Aceitamos devolucoes ate 30 dias apos a rececao da encomenda, desde que os artigos estejam sem sinais de uso.',
+        title: 'Periodo de devolução',
+        text: 'Aceitamos devoluções até 30 dias após a receção da encomenda, desde que os artigos estejam sem sinais de uso.',
       },
       {
         title: 'Como devolver',
-        text: 'Entre em contacto com a equipa de apoio, indique o numero da encomenda e os artigos a devolver. Enviamos as instrucoes por email.',
+        text: 'Entre em contacto com a equipa de apoio, indique o número da encomenda e os artigos a devolver. Enviamos as instruções por email.',
       },
       {
         title: 'Reembolso',
-        text: 'O reembolso e processado pelo mesmo metodo de pagamento apos validacao dos artigos devolvidos.',
+        text: 'O reembolso e processado pelo mesmo metodo de pagamento apos validação dos artigos devolvidos.',
       },
     ],
   },
@@ -121,39 +121,39 @@ export const footerPages = [
     path: '/contacte-nos',
     eyebrow: 'Apoio ao cliente',
     title: 'Contacte-nos',
-    description: 'Estamos disponiveis para ajudar com encomendas, produtos, tamanhos e sugestoes.',
+    description: 'Estamos disponíveis para ajudar com encomendas, produtos, tamanhos e sugestões.',
     sections: [
       {
         title: 'Email',
-        text: 'Envie a sua mensagem para apoio@atelierwec.pt. Respondemos normalmente em 1 dia util.',
+        text: 'Envie a sua mensagem para apoio@atelierwec.pt. Respondemos normalmente em 1 dia útil.',
       },
       {
-        title: 'Horario',
+        title: 'Horário',
         text: 'Segunda a sexta, das 9h00 as 18h00. Aos fins de semana, acompanhamos apenas pedidos urgentes.',
       },
       {
-        title: 'Informacao util',
-        text: 'Para pedidos sobre encomendas, inclua o numero da encomenda e o email usado na compra.',
+        title: 'Informação útil',
+        text: 'Para pedidos sobre encomendas, inclua o número da encomenda e o email usado na compra.',
       },
     ],
   },
   {
     path: '/a-nossa-historia',
     eyebrow: 'A empresa',
-    title: 'A nossa historia',
-    description: 'O Atelier WEC nasceu para reunir roupa, acessorios e objetos de casa com uma selecao cuidada.',
+    title: 'A nossa história',
+    description: 'O Atelier WEC nasceu para reunir roupa, acessórios e objetos de casa com uma seleção cuidada.',
     sections: [
       {
         title: 'Origem',
-        text: 'Comecamos com uma ideia simples: criar uma loja de moda com navegacao clara, produtos bem apresentados e colecoes faceis de combinar.',
+        text: 'Começamos com uma ideia simples: criar uma loja de moda com navegação clara, produtos bem apresentados e coleções fáceis de combinar.',
       },
       {
         title: 'O que defendemos',
-        text: 'Valorizamos materiais confortaveis, cortes atuais, informacao transparente e uma experiencia de compra direta.',
+        text: 'Valorizamos materiais confortáveis, cortes atuais, informação transparente e uma experiência de compra direta.',
       },
       {
         title: 'Hoje',
-        text: 'A loja evolui com novas categorias, filtros, favoritos e carrinho para simular uma experiencia de ecommerce completa.',
+        text: 'A loja evolui com novas categorias, filtros, favoritos e carrinho para simular uma experiência de ecommerce completa.',
       },
     ],
   },
@@ -165,15 +165,15 @@ export const footerPages = [
     sections: [
       {
         title: 'Areas',
-        text: 'Trabalhamos em produto, fotografia, conteudo, apoio ao cliente, tecnologia, logistica e gestao de loja.',
+        text: 'Trabalhamos em produto, fotografia, conteúdo, apoio ao cliente, tecnologia, logística e gestão de loja.',
       },
       {
         title: 'Perfil',
-        text: 'Valorizamos rigor, boa comunicacao, autonomia e atencao ao detalhe em cada ponto da experiencia do cliente.',
+        text: 'Valorizamos rigor, boa comunicação, autonomia e atenção ao detalhe em cada ponto da experiência do cliente.',
       },
       {
         title: 'Candidaturas',
-        text: 'Envie o seu CV e portfolio, quando aplicavel, para carreiras@atelierwec.pt com a area de interesse no assunto.',
+        text: 'Envie o seu CV e portfólio, quando aplicável, para carreiras@atelierwec.pt com a área de interesse no assunto.',
       },
     ],
   },
@@ -181,19 +181,19 @@ export const footerPages = [
     path: '/sustentabilidade',
     eyebrow: 'A empresa',
     title: 'Sustentabilidade',
-    description: 'Trabalhamos para reduzir desperdicio, escolher melhor e prolongar a vida util dos produtos.',
+    description: 'Trabalhamos para reduzir desperdício, escolher melhor e prolongar a vida útil dos produtos.',
     sections: [
       {
-        title: 'Selecao de produto',
-        text: 'Damos prioridade a pecas versateis, duraveis e faceis de integrar no guarda-roupa ou na casa ao longo do tempo.',
+        title: 'Seleção de produto',
+        text: 'Damos prioridade a peças versáteis, duráveis e fáceis de integrar no guarda-roupa ou na casa ao longo do tempo.',
       },
       {
         title: 'Embalagem',
-        text: 'Procuramos reduzir volumes desnecessarios e usar materiais reciclaveis sempre que possivel.',
+        text: 'Procuramos reduzir volumes desnecessários e usar materiais recicláveis sempre que possível.',
       },
       {
         title: 'Responsabilidade',
-        text: 'Incentivamos compras pensadas, cuidados de manutencao e devolucoes responsaveis para diminuir desperdicio.',
+        text: 'Incentivamos compras pensadas, cuidados de manutenção e devoluções responsáveis para diminuir desperdício.',
       },
     ],
   },
@@ -205,15 +205,15 @@ export const footerPages = [
     sections: [
       {
         title: 'Dados recolhidos',
-        text: 'Usamos apenas os dados necessarios para simular conta, carrinho, favoritos e comunicacoes da loja neste projeto.',
+        text: 'Usamos apenas os dados necessários para simular conta, carrinho, favoritos e comunicações da loja neste projeto.',
       },
       {
         title: 'Finalidade',
-        text: 'A informacao serve para melhorar a experiencia de compra, guardar preferencias e preparar encomendas.',
+        text: 'A informação serve para melhorar a experiência de compra, guardar preferências e preparar encomendas.',
       },
       {
         title: 'Controlo',
-        text: 'Pode limpar dados locais do browser, terminar sessao ou contactar-nos para esclarecer qualquer questao sobre privacidade.',
+        text: 'Pode limpar dados locais do browser, terminar sessão ou contactar-nos para esclarecer qualquer questão sobre privacidade.',
       },
     ],
   },
@@ -221,19 +221,19 @@ export const footerPages = [
     path: '/termos',
     eyebrow: 'Legal',
     title: 'Termos',
-    description: 'Condicoes gerais de utilizacao da loja e da experiencia de compra online.',
+    description: 'Condições gerais de utilização da loja e da experiência de compra online.',
     sections: [
       {
-        title: 'Utilizacao da loja',
-        text: 'A navegacao deve ser feita de forma responsavel, respeitando informacao de produtos, precos e disponibilidade apresentados.',
+        title: 'Utilização da loja',
+        text: 'A navegação deve ser feita de forma responsável, respeitando informação de produtos, preços e disponibilidade apresentados.',
       },
       {
         title: 'Encomendas',
-        text: 'A confirmacao da compra resume artigos, quantidades, morada e metodo de pagamento antes da finalizacao.',
+        text: 'A confirmação da compra resume artigos, quantidades, morada e método de pagamento antes da finalização.',
       },
       {
-        title: 'Alteracoes',
-        text: 'Os conteudos, colecoes e condicoes podem ser atualizados para refletir melhorias na experiencia de compra.',
+        title: 'Alterações',
+        text: 'Os conteúdos, coleções e condições podem ser atualizados para refletir melhorias na experiência de compra.',
       },
     ],
   },
@@ -241,19 +241,19 @@ export const footerPages = [
     path: '/cookies',
     eyebrow: 'Legal',
     title: 'Cookies',
-    description: 'Informacao sobre dados locais usados para manter a loja funcional durante a navegacao.',
+    description: 'Informação sobre dados locais usados para manter a loja funcional durante a navegação.',
     sections: [
       {
         title: 'Dados locais',
         text: 'O projeto usa armazenamento local para guardar carrinho, favoritos e conta no browser.',
       },
       {
-        title: 'Preferencias',
-        text: 'Estes dados ajudam a manter artigos guardados quando muda de pagina ou regressa mais tarde.',
+        title: 'Preferências',
+        text: 'Estes dados ajudam a manter artigos guardados quando muda de página ou regressa mais tarde.',
       },
       {
-        title: 'Gestao',
-        text: 'Pode apagar estes dados nas definicoes do browser ou usando as opcoes de limpeza da propria loja.',
+        title: 'Gestão',
+        text: 'Pode apagar estes dados nas definições do browser ou usando as opções de limpeza da própria loja.',
       },
     ],
   },

@@ -38,7 +38,7 @@ function ProductPage() {
         <main className="page-shell">
           <section className="category-hero">
             <p>Produto</p>
-            <h1>Produto nao encontrado</h1>
+            <h1>Produto não encontrado</h1>
             <span>Volte a uma categoria e escolha outro produto.</span>
           </section>
         </main>

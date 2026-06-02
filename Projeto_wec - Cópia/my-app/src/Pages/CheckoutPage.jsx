@@ -45,11 +45,11 @@ function CheckoutPage() {
           <section className="category-hero">
             <p>Compra finalizada</p>
             <h1>Obrigado pela sua encomenda</h1>
-            <span>Enviamos a confirmacao e os detalhes de acompanhamento para o seu email.</span>
+            <span>Enviamos a confirmação e os detalhes de acompanhamento para o seu email.</span>
           </section>
           <section className="empty-cart checkout-confirmation">
             <h2>Encomenda recebida</h2>
-            <p>A equipa vai preparar os artigos e confirmar o envio nos proximos dias uteis.</p>
+            <p>A equipa vai preparar os artigos e confirmar o envio nos próximos dias uteis.</p>
             <Link to="/">Continuar a comprar</Link>
           </section>
         </main>
@@ -70,7 +70,7 @@ function CheckoutPage() {
 
         {cart.length === 0 ? (
           <section className="empty-cart">
-            <h2>O carrinho esta vazio</h2>
+            <h2>O carrinho está vazio</h2>
             <Link to="/">Continuar a comprar</Link>
           </section>
         ) : (
@@ -99,7 +99,7 @@ function CheckoutPage() {
                   <input type="text" required placeholder="Rua e numero" />
                 </label>
                 <label>
-                  Codigo postal
+                  Código postal
                   <input type="text" required placeholder="0000-000" />
                 </label>
                 <label>
@@ -111,11 +111,11 @@ function CheckoutPage() {
               <div className="checkout-panel">
                 <h2>Pagamento</h2>
                 <label>
-                  Metodo
+                  Método
                   <select required defaultValue="cartao">
-                    <option value="cartao">Cartao bancario</option>
+                    <option value="cartao">Cartão bancário</option>
                     <option value="mbway">MB Way</option>
-                    <option value="referencia">Referencia Multibanco</option>
+                    <option value="referencia">Referência Multibanco</option>
                   </select>
                 </label>
                 <button type="submit" className="checkout-submit">

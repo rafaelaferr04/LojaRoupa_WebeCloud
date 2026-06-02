@@ -20,9 +20,9 @@ function CategoryToolbar({
             onChange={(event) => onSortChange(event.target.value)}
           >
             <option value="recommended">Recomendados</option>
-            <option value="price-desc">Preco descendente</option>
-            <option value="price-asc">Preco ascendente</option>
-            <option value="name-asc">Ordem alfabetica A-Z</option>
+            <option value="price-desc">Preço descendente</option>
+            <option value="price-asc">Preço ascendente</option>
+            <option value="name-asc">Ordem alfabética A-Z</option>
           </select>
         </label>
         <p>{productCount} produto(s)</p>

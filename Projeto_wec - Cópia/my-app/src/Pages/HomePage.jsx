@@ -18,12 +18,12 @@ function HomePage() {
     {
       label: 'Homem',
       title: 'Mocassins de verão',
-      text: 'Pele, camurca e tons leves para coordenados de dias quentes.',
+      text: 'Pele, camurça e tons leves para coordenados de dias quentes.',
       section: getSection('homem', 'Mocassins'),
     },
     {
       label: 'Mulher',
-      title: 'Vestidos fluidos',
+      title: 'Vestidos fluídos',
       text: 'Silhuetas frescas para férias, cidade e finais de tarde.',
       section: getSection('mulher', 'Vestidos'),
     },
@@ -36,8 +36,8 @@ function HomePage() {
   ].filter((collection) => collection.section)
 
   const featuredProducts = [
-    ...categoryPages.mulher.sections[0].products.slice(0, 3),
-    ...categoryPages.homem.sections[0].products.slice(0, 3),
+    ...categoryPages.mulher.sections[0].products.slice(0, 2),
+    ...categoryPages.homem.sections[0].products.slice(2, 4),
     ...categoryPages.casa.sections[0].products.slice(0, 2),
   ]
 
@@ -47,11 +47,11 @@ function HomePage() {
       <main className="page-shell">
         <section className="home-hero">
           <div className="home-hero-content">
-            <p>Nova selecao 2026</p>
+            <p>Nova seleção 2026</p>
             <h1>Essenciais premium para vestir e viver melhor</h1>
             <span>
-              Moda para mulher, homem e crianca, decoracao para casa e saldos
-              reunidos numa experiencia simples de loja online.
+              Moda para mulher, homem e criança, decoração para casa e saldos
+              reunidos numa experiência simples de loja online.
             </span>
             <div className="hero-actions">
               <Link to="/mulher" aria-label="Comprar artigos de mulher">

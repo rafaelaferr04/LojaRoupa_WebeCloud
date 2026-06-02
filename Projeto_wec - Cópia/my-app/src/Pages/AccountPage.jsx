@@ -30,7 +30,7 @@ function AccountPage() {
       }
 
       if (password !== confirmPassword) {
-        setError('As palavras-passe nao coincidem.')
+        setError('As palavras-passe não coincidem.')
         return
       }
 
@@ -99,7 +99,7 @@ function AccountPage() {
         <section className="category-hero">
           <p>Conta</p>
           <h1>A sua conta</h1>
-          <span>Inicie sessao ou crie uma conta para guardar carrinho e favoritos.</span>
+          <span>Inicie sessão ou crie uma conta para guardar carrinho e favoritos.</span>
         </section>
         <section className="account-page">
           <div className="account-card account-auth">
@@ -191,11 +191,11 @@ function AccountPage() {
           </div>
 
           <div className="account-card account-benefits-card">
-            <h2>Beneficios da conta</h2>
+            <h2>Benefícios da conta</h2>
             <ul className="account-benefits">
               <li>Carrinho guardado por conta</li>
               <li>Favoritos guardados por conta</li>
-              <li>Acesso rapido em futuras visitas</li>
+              <li>Acesso rápido em futuras visitas</li>
             </ul>
             <p className="account-note">
               Os seus dados ficam associados ao email usado no registo desta loja.

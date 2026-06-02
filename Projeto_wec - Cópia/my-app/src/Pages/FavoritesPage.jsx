@@ -33,7 +33,7 @@ function FavoritesPage() {
           </>
         ) : (
           <section className="empty-cart">
-            <h2>Ainda nao tem favoritos</h2>
+            <h2>Ainda não tem favoritos</h2>
             <Link to="/">Explorar produtos</Link>
           </section>
         )}

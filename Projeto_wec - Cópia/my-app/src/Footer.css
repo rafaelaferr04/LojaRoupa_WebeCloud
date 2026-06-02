@@ -1,7 +1,7 @@
 .rl-footer {
-  background-color: #121212;
-  border-top: 1px solid #2a2a2a;
-  color: #f5f5f0;
+  background-color: #f7f2e8;
+  border-top: 1px solid #e0d5c4;
+  color: #1c1510;
   padding: 58px clamp(20px, 5vw, 72px) 0;
 }
 
@@ -12,7 +12,7 @@
 }
 
 .footer-newsletter h3 {
-  color: #d4af37;
+  color: #bc8a4a;
   font-size: 1rem;
   letter-spacing: 0.16rem;
   margin: 0 0 14px;
@@ -20,7 +20,7 @@
 }
 
 .footer-newsletter p {
-  color: #a9a197;
+  color: #726660;
   line-height: 1.6;
   margin: 0 0 24px;
 }
@@ -33,22 +33,22 @@
 
 .newsletter-form input {
   background: transparent;
-  border: 1px solid #343434;
-  color: #f5f5f0;
+  border: 1px solid #e0d5c4;
+  color: #1c1510;
   flex: 1;
   min-width: 0;
   padding: 13px 14px;
 }
 
 .newsletter-form input:focus {
-  border-color: #d4af37;
+  border-color: #bc8a4a;
   outline: none;
 }
 
 .newsletter-form button {
-  background: #d4af37;
-  border: 1px solid #d4af37;
-  color: #101010;
+  background: #bc8a4a;
+  border: 1px solid #bc8a4a;
+  color: #1c1510;
   cursor: pointer;
   font-weight: 800;
   letter-spacing: 0.08rem;
@@ -58,7 +58,7 @@
 
 .footer-divider {
   border: 0;
-  border-top: 1px solid #2a2a2a;
+  border-top: 1px solid #e0d5c4;
   margin: 0 0 38px;
 }
 
@@ -77,7 +77,7 @@
 }
 
 .footer-column h4 {
-  color: #d4af37;
+  color: #bc8a4a;
   font-size: 0.78rem;
   letter-spacing: 0.12rem;
   margin: 0 0 16px;
@@ -96,14 +96,14 @@
 
 .footer-column a,
 .legal-links a {
-  color: #a9a197;
+  color: #726660;
   font-size: 0.86rem;
   text-decoration: none;
 }
 
 .footer-column a:hover,
 .legal-links a:hover {
-  color: #d4af37;
+  color: #bc8a4a;
 }
 
 .social-icons {
@@ -113,7 +113,7 @@
 }
 
 .footer-bottom {
-  border-top: 1px solid #2a2a2a;
+  border-top: 1px solid #e0d5c4;
   display: flex;
   flex-wrap: wrap;
   gap: 18px;
@@ -122,7 +122,7 @@
 }
 
 .footer-bottom p {
-  color: #777;
+  color: #9a9080;
   margin: 0;
 }
 
