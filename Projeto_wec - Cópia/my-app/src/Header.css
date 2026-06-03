@@ -30,9 +30,9 @@
 .main-nav {
   align-items: center;
   display: grid;
-  gap: 16px;
-  grid-template-columns: 1fr auto 1fr;
-  padding: 20px clamp(18px, 4vw, 44px);
+  gap: clamp(6px, 1.6vw, 16px);
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  padding: 20px clamp(12px, 3vw, 44px);
 }
 
 .nav-left,
@@ -51,7 +51,7 @@
 }
 
 .nav-right {
-  gap: 18px;
+  gap: clamp(8px, 1.6vw, 18px);
   justify-content: flex-end;
 }
 
@@ -63,25 +63,26 @@
 }
 
 .logo {
-  font-size: clamp(1rem, 2vw, 1.25rem);
+  font-size: clamp(0.9rem, 1.8vw, 1.25rem);
   font-weight: 700;
-  letter-spacing: 0.28rem;
+  letter-spacing: clamp(0.14rem, 0.55vw, 0.28rem);
   text-align: center;
 }
 
 .nav-icon {
   align-items: center;
   display: inline-flex;
-  font-size: 0.72rem;
+  font-size: clamp(0.62rem, 1.1vw, 0.72rem);
   font-weight: 700;
-  gap: 6px;
-  letter-spacing: 0.08rem;
+  gap: clamp(3px, 0.7vw, 6px);
+  letter-spacing: clamp(0.03rem, 0.45vw, 0.08rem);
   text-transform: uppercase;
   transition: color 0.2s ease;
+  white-space: nowrap;
 }
 
 .nav-icon ion-icon {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.4vw, 1rem);
 }
 
 .nav-icon:hover,
@@ -139,7 +140,7 @@
 .categories-nav a.destaque:hover,
 .categories-nav a.destaque.active,
 .categories-nav a.destaque.active:hover {
-  color: var(--destaque);
+  color: var(--gold);
   opacity: 1;
 }
 
@@ -225,20 +226,6 @@
 }
 
 @media (max-width: 860px) {
-  .main-nav {
-    grid-template-columns: 1fr;
-    padding: 18px;
-  }
-
-  .nav-left,
-  .nav-right {
-    justify-content: center;
-  }
-
-  .nav-right {
-    flex-wrap: wrap;
-  }
-
   .categories-nav a {
     padding: 12px clamp(8px, 2vw, 13px);
   }
@@ -252,6 +239,22 @@
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 142px), 1fr));
     justify-content: stretch;
     padding: 11px 14px 14px;
+  }
+}
+
+@media (max-width: 620px) {
+  .main-nav {
+    grid-template-columns: 1fr;
+    padding: 18px;
+  }
+
+  .nav-left,
+  .nav-right {
+    justify-content: center;
+  }
+
+  .nav-right {
+    flex-wrap: wrap;
   }
 }
 

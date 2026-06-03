@@ -4,7 +4,11 @@ import Header from '../Header.jsx'
 
 function InfoPage({ page }) {
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    const scrollFrame = requestAnimationFrame(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    })
+
+    return () => cancelAnimationFrame(scrollFrame)
   }, [page.path])
 
   return (

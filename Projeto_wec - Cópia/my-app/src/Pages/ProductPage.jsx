@@ -5,6 +5,8 @@ import Header from '../Header.jsx'
 import { useStore } from '../context/StoreContext.jsx'
 import { getProductById } from '../data/storeData.js'
 
+const productReturnsText = 'No caso de encomenda sem registo, pode solicitar a devolução clicando em A Minha Conta, na secção Devoluções. A devolução ao domicílio tem um custo de 3,95€ que será deduzido do valor reembolsado. Dispõe de 30 dias para realizar a sua devolução a partir da data em que efetuou a sua compra. Informamos que os artigos personalizados não podem ser devolvidos ou trocados.'
+
 function getProductReturnPosition() {
   const savedPosition = sessionStorage.getItem('productReturnPosition')
   sessionStorage.removeItem('productReturnPosition')
@@ -26,6 +28,7 @@ function ProductPage() {
   const { addToCart, isFavorite, toggleFavorite } = useStore()
   const product = getProductById(productId)
   const [selectedSize, setSelectedSize] = useState(product?.sizes[0] ?? '')
+  const materialsTitle = product?.subcategory === 'Perfumes' ? 'Ingredientes' : 'Materiais'
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -106,6 +109,17 @@ function ProductPage() {
               {product.oldPrice && <span>{product.oldPrice}</span>}
               {product.price}
             </p>
+
+            <div className="product-detail-accordions">
+              <details>
+                <summary>{materialsTitle}</summary>
+                <p>{product.materials}</p>
+              </details>
+              <details>
+                <summary>Devoluções</summary>
+                <p>{productReturnsText}</p>
+              </details>
+            </div>
 
             <fieldset className="size-picker">
               <legend>Tamanho</legend>

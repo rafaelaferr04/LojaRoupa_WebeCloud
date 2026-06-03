@@ -5,7 +5,7 @@ import Header from '../Header.jsx'
 import { useStore } from '../context/StoreContext.jsx'
 
 function CheckoutPage() {
-  const { cart, cartCount, clearCart } = useStore()
+  const { cart, cartCount, clearCart, currentUser, placeOrder } = useStore()
   const [orderFinished, setOrderFinished] = useState(false)
 
   useEffect(() => {
@@ -32,7 +32,13 @@ function CheckoutPage() {
 
   function handleSubmit(event) {
     event.preventDefault()
-    clearCart()
+
+    if (currentUser) {
+      placeOrder({ items: cart, total })
+    } else {
+      clearCart()
+    }
+
     setOrderFinished(true)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
@@ -75,7 +81,7 @@ function CheckoutPage() {
           </section>
         ) : (
           <section className="checkout-page">
-            <form className="checkout-form" onSubmit={handleSubmit}>
+            <form id="checkout-form" className="checkout-form" onSubmit={handleSubmit}>
               <div className="checkout-panel">
                 <h2>Dados de contacto</h2>
                 <label>
@@ -118,9 +124,6 @@ function CheckoutPage() {
                     <option value="referencia">Referência Multibanco</option>
                   </select>
                 </label>
-                <button type="submit" className="checkout-submit">
-                  Confirmar encomenda
-                </button>
               </div>
             </form>
 
@@ -143,6 +146,9 @@ function CheckoutPage() {
               <p>
                 Total <span>{formattedTotal}</span>
               </p>
+              <button type="submit" form="checkout-form" className="checkout-submit">
+                Confirmar encomenda
+              </button>
             </aside>
           </section>
         )}

@@ -1,31 +1,23 @@
 /* eslint-disable react-refresh/only-export-components */
 import { Link } from 'react-router-dom'
 
-function scrollToPageTop() {
-  window.scrollTo({ top: 0, behavior: 'smooth' })
-}
-
 export function FooterColumns() {
-  function handleFooterLinkClick() {
-    requestAnimationFrame(() => scrollToPageTop())
-  }
-
   return (
     <div className="footer-columns">
       <section className="footer-column">
         <h4>Apoio ao cliente</h4>
         <ul>
           <li>
-            <Link to="/estado-da-encomenda" onClick={handleFooterLinkClick}>Estado da Encomenda</Link>
+            <Link to="/estado-da-encomenda">Estado da Encomenda</Link>
           </li>
           <li>
-            <Link to="/envios-e-entregas" onClick={handleFooterLinkClick}>Envios e Entregas</Link>
+            <Link to="/envios-e-entregas">Envios e Entregas</Link>
           </li>
           <li>
-            <Link to="/devolucoes" onClick={handleFooterLinkClick}>Devoluções</Link>
+            <Link to="/devolucoes">Devoluções</Link>
           </li>
           <li>
-            <Link to="/contacte-nos" onClick={handleFooterLinkClick}>Contacte-nos</Link>
+            <Link to="/contacte-nos">Contacte-nos</Link>
           </li>
         </ul>
       </section>
@@ -34,13 +26,13 @@ export function FooterColumns() {
         <h4>A empresa</h4>
         <ul>
           <li>
-            <Link to="/a-nossa-historia" onClick={handleFooterLinkClick}>A Nossa História</Link>
+            <Link to="/a-nossa-historia">A Nossa História</Link>
           </li>
           <li>
-            <Link to="/carreiras" onClick={handleFooterLinkClick}>Carreiras</Link>
+            <Link to="/carreiras">Carreiras</Link>
           </li>
           <li>
-            <Link to="/sustentabilidade" onClick={handleFooterLinkClick}>Sustentabilidade</Link>
+            <Link to="/sustentabilidade">Sustentabilidade</Link>
           </li>
         </ul>
       </section>
@@ -98,7 +90,7 @@ export const footerPages = [
     ],
   },
   {
-    path: '/devoluções',
+    path: '/devolucoes',
     eyebrow: 'Apoio ao cliente',
     title: 'Devoluções',
     description: 'Pode devolver artigos que não tenham sido usados e estejam na embalagem original.',
@@ -258,3 +250,4 @@ export const footerPages = [
     ],
   },
 ]
+

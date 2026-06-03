@@ -26,6 +26,7 @@ function normalizeUser(user) {
     password: user.password,
     cart: Array.isArray(user.cart) ? user.cart : [],
     favorites: Array.isArray(user.favorites) ? user.favorites : [],
+    orders: Array.isArray(user.orders) ? user.orders : [],
   }
 }
 
@@ -81,6 +82,7 @@ export function StoreProvider({ children }) {
         password,
         cart: [],
         favorites: [],
+        orders: [],
       },
     ])
     setUser(normalizedEmail)
@@ -158,6 +160,62 @@ export function StoreProvider({ children }) {
     saveCart([])
   }
 
+  function placeOrder({ items, total }) {
+    if (!currentUser || items.length === 0) {
+      return null
+    }
+
+    const order = {
+      id: `WEC-${Date.now()}`,
+      createdAt: new Date().toISOString(),
+      total,
+      items: items.map((item) => ({
+        itemKey: item.itemKey,
+        productId: item.productId,
+        name: item.name,
+        price: item.price,
+        priceValue: item.priceValue,
+        image: item.image,
+        imageAlt: item.imageAlt,
+        size: item.size,
+        quantity: item.quantity,
+      })),
+    }
+
+    updateUser(currentUser.email, (storedUser) => ({
+      orders: [order, ...(storedUser.orders ?? [])],
+      cart: [],
+    }))
+
+    return order
+  }
+
+  function requestReturn({ orderId, itemKey }) {
+    if (!currentUser) {
+      return { ok: false, error: 'Inicie sessão para solicitar uma devolução.' }
+    }
+
+    updateUser(currentUser.email, (storedUser) => ({
+      orders: (storedUser.orders ?? []).map((order) =>
+        order.id === orderId
+          ? {
+              ...order,
+              items: order.items.map((item) =>
+                item.itemKey === itemKey
+                  ? {
+                      ...item,
+                      returnRequestedAt: new Date().toISOString(),
+                    }
+                  : item,
+              ),
+            }
+          : order,
+      ),
+    }))
+
+    return { ok: true }
+  }
+
   function toggleFavorite(productId) {
     if (!currentUser) {
       return {
@@ -196,6 +254,8 @@ export function StoreProvider({ children }) {
     removeFromCart,
     updateCartQuantity,
     clearCart,
+    placeOrder,
+    requestReturn,
     favorites,
     favoriteCount: favorites.length,
     favoriteProducts,

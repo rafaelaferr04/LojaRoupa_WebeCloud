@@ -39,8 +39,6 @@ export const navigationItems = [
           { label: 'Malas de viagem', path: '/homem/malas-de-viagem' },
           { label: 'Carteiras', path: '/homem/carteiras' },
           { label: 'Cintos', path: '/homem/cintos' },
-          { label: 'Relógios', path: '/homem/relogios' },
-          { label: 'Óculos de sol', path: '/homem/oculos-de-sol' },
         ],
       },
     ],
@@ -78,7 +76,6 @@ export const navigationItems = [
         links: [
           { label: 'Malas de mão', path: '/mulher/malas-de-mao' },
           { label: 'Carteiras', path: '/mulher/carteiras' },
-          { label: 'Joias', path: '/mulher/joias' },
           { label: 'Perfumes', path: '/mulher/perfumes' },
           { label: 'Lenços', path: '/mulher/lencos' },
         ],
@@ -108,7 +105,6 @@ export const navigationItems = [
           { label: 'Ténis', path: '/crianca/tenis' },
           { label: 'Sabrinas', path: '/crianca/sabrinas' },
           { label: 'Botas', path: '/crianca/botas' },
-          { label: 'Galochas', path: '/crianca/galochas' },
         ],
       },
       {
@@ -117,7 +113,6 @@ export const navigationItems = [
         links: [
           { label: 'Mochilas', path: '/crianca/mochilas' },
           { label: 'Bonés', path: '/crianca/bones' },
-          { label: 'Brinquedos', path: '/crianca/brinquedos' },
           { label: 'Mantas de bebé', path: '/crianca/mantas-de-bebe' },
         ],
       },
@@ -142,7 +137,6 @@ export const navigationItems = [
         title: 'Decoração',
         path: '/casa/decoracao',
         links: [
-          { label: 'Velas', path: '/casa/velas' },
           { label: 'Molduras', path: '/casa/molduras' },
           { label: 'Almofadas', path: '/casa/almofadas' },
           { label: 'Objetos decorativos', path: '/casa/objetos-decorativos' },
@@ -179,10 +173,8 @@ export const navigationItems = [
         title: 'Campanhas',
         path: '/saldos/campanhas',
         links: [
-          { label: 'Últimas unidades', path: '/saldos/ultimas-unidades' },
           { label: 'Até 30%', path: '/saldos/ate-30por-cento' },
           { label: 'Até 50%', path: '/saldos/ate-50por-cento' },
-          { label: 'Escolhas premium', path: '/saldos/escolhas-premium' },
         ],
       },
     ],
