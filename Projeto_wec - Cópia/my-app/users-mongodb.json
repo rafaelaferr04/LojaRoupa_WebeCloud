@@ -1,0 +1,22 @@
+[
+  {
+    "username": "rafaela",
+    "name": "Rafaela Maria",
+    "email": "rafaela@example.com",
+    "password": "123456",
+    "confirmed": true,
+    "role": "user",
+    "cart": [],
+    "favorites": ["2", "8", "91"]
+  },
+  {
+    "username": "admin",
+    "name": "Administrador Atelier WEC",
+    "email": "admin@atelierwec.pt",
+    "password": "admin123",
+    "confirmed": true,
+    "role": "admin",
+    "cart": [],
+    "favorites": []
+  }
+]

@@ -29,7 +29,7 @@ function formatOrderDate(date) {
 function AccountPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { currentUser, login, logout, register, requestReturn } = useStore()
+  const { currentUser, login, logout, orders, register, requestReturn } = useStore()
   const [isRegister, setIsRegister] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -42,7 +42,7 @@ function AccountPage() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
     setError('')
 
@@ -57,7 +57,7 @@ function AccountPage() {
         return
       }
 
-      const result = register({ name, email, password })
+      const result = await register({ name, email, password })
 
       if (!result.ok) {
         setError(result.error)
@@ -66,7 +66,7 @@ function AccountPage() {
       return
     }
 
-    const result = login(email, password)
+    const result = await login(email, password)
 
     if (!result.ok) {
       setError(result.error)
@@ -78,8 +78,8 @@ function AccountPage() {
     navigate('/')
   }
 
-  function handleReturnRequest(orderId, itemKey) {
-    const result = requestReturn({ orderId, itemKey })
+  async function handleReturnRequest(orderId, itemKey) {
+    const result = await requestReturn({ orderId, itemKey })
 
     if (result.ok) {
       setReturnMessage(`Pedido de devolução registado. Enviámos as instruções para ${currentUser.email}.`)
@@ -87,7 +87,6 @@ function AccountPage() {
   }
 
   if (currentUser) {
-    const orders = currentUser.orders ?? []
     const returnProducts = orders
       .filter((order) => isReturnEligible(order.createdAt))
       .flatMap((order) =>

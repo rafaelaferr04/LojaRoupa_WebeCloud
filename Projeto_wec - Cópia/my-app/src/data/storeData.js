@@ -8,6 +8,37 @@ function getNavigationSubcategoryPath(categoryKey, subcategory) {
   return link?.path ?? `/${categoryKey}`
 }
 
+// Para marcar um produto em saldos, basta escrever aqui:
+// idDoProduto: percentagemDeDesconto
+const campanhasSaldos = {
+  2: 30,
+  8: 50,
+  15: 30,
+  23: 50,
+  35: 30,
+  48: 50,
+  62: 30,
+  74: 50,
+  91: 30,
+  108: 50,
+  126: 30,
+  142: 50,
+}
+
+function getInfoSaldos(produto) {
+  const desconto = campanhasSaldos[produto.id]
+
+  if (!desconto) {
+    return null
+  }
+
+  return {
+    precoFinal: Math.round(produto.preco * (1 - desconto / 100)),
+    precoAntigo: produto.preco,
+    campanha: `Até ${desconto}%`,
+  }
+}
+
 const pageInfo = {
   homem: {
     title: 'Homem',
@@ -133,7 +164,6 @@ const produtos = [
     id: 3,
     title: 'Sobretudo comprido preto',
     preco: 209,
-    precoAntigo: 279,
     categoriaKey: 'homem',
     categoria: 'Homem',
     grupo: 'Pronto a vestir',
@@ -210,7 +240,6 @@ const produtos = [
     id: 8,
     title: 'Camisa linho azul claro',
     preco: 76,
-    precoAntigo: 109,
     categoriaKey: 'homem',
     categoria: 'Homem',
     grupo: 'Pronto a vestir',
@@ -221,7 +250,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/19045898/pexels-photo-19045898.jpeg',
     descricao: 'Camisa linho azul claro em tom azul claro, da coleção Homem, com corte cuidado, materiais selecionados e acabamento de inspiração premium. A proposta foi pensada para a categoria de camisas, integrando pronto a vestir com conforto, presença e versatilidade.',
     materiais: 'Linho europeu com algodão para maior suavidade, botões em madrepérola sintética e costuras reforçadas.',
-    campanha: 'Até 30%',
   },
   {
     id: 9,
@@ -348,7 +376,6 @@ const produtos = [
     id: 17,
     title: 'T-shirt de gola redonda',
     preco: 48,
-    precoAntigo: 69,
     categoriaKey: 'homem',
     categoria: 'Homem',
     grupo: 'Pronto a vestir',
@@ -359,7 +386,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/4970991/pexels-photo-4970991.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'T-shirt de gola redonda em tom bege, da coleção Homem, com corte cuidado, materiais selecionados e acabamento de inspiração premium. A proposta foi pensada para a categoria de t-shirts, integrando pronto a vestir com conforto, presença e versatilidade.',
     materiais: 'Algodão orgânico compacto, toque macio, gola canelada com elastano e costuras interiores reforçadas.',
-    campanha: 'Até 30%',
   },
   {
     id: 18,
@@ -562,7 +588,6 @@ const produtos = [
     id: 31,
     title: 'Calças chino',
     preco: 89,
-    precoAntigo: 119,
     categoriaKey: 'homem',
     categoria: 'Homem',
     grupo: 'Pronto a vestir',
@@ -821,7 +846,6 @@ const produtos = [
     id: 48,
     title: 'Sapatos sociais',
     preco: 145,
-    precoAntigo: 289,
     categoriaKey: 'homem',
     categoria: 'Homem',
     grupo: 'Sapatos',
@@ -832,7 +856,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/18031040/pexels-photo-18031040.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Sapatos sociais em tom camel, da coleção Homem, com construção cuidada, linhas elegantes e acabamento de qualidade. O modelo foi pensado para a categoria de sapatos de cidade, oferecendo conforto estável e presença discreta em coordenados sofisticados.',
     materiais: 'Exterior em pele ou camurça premium, forro em pele, palmilha confortável e sola em couro com inserção de borracha antiderrapante.',
-    campanha: 'Até 50%',
   },
   {
     id: 49,
@@ -929,7 +952,6 @@ const produtos = [
     id: 55,
     title: 'Sapatilhas em pele',
     preco: 97,
-    precoAntigo: 129,
     categoriaKey: 'homem',
     categoria: 'Homem',
     grupo: 'Sapatos',
@@ -1021,7 +1043,6 @@ const produtos = [
     id: 61,
     title: 'Botas Chelsea',
     preco: 139,
-    precoAntigo: 199,
     categoriaKey: 'homem',
     categoria: 'Homem',
     grupo: 'Sapatos',
@@ -1032,7 +1053,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/18031040/pexels-photo-18031040.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Botas Chelsea em tom preto, da coleção Homem, com construção cuidada, linhas elegantes e acabamento de qualidade. O modelo foi pensado para a categoria de botas, oferecendo conforto estável e presença discreta em coordenados sofisticados.',
     materiais: 'Exterior em pele ou camurça premium, forro em pele, palmilha confortável e sola em couro com inserção de borracha antiderrapante.',
-    campanha: 'Até 30%',
     destaque: 'Novo',
   },
   {
@@ -1342,7 +1362,6 @@ const produtos = [
     id: 82,
     title: 'Cinto clássico',
     preco: 53,
-    precoAntigo: 105,
     categoriaKey: 'homem',
     categoria: 'Homem',
     grupo: 'Acessórios',
@@ -1353,7 +1372,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/994523/pexels-photo-994523.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Cinto clássico em tom dourado, da coleção Homem, com proporções equilibradas e acabamento refinado. A proposta foi pensada para a categoria de cintos, acrescentando funcionalidade e um detalhe elegante ao guarda-roupa.',
     materiais: 'Pele bovina premium, fivela metálica com acabamento polido ou escovado e passador reforçado.',
-    campanha: 'Até 50%',
   },
   {
     id: 83,
@@ -1405,7 +1423,6 @@ const produtos = [
     id: 98,
     title: 'Blusão técnico',
     preco: 172,
-    precoAntigo: 229,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Pronto a vestir',
@@ -1451,7 +1468,6 @@ const produtos = [
     id: 101,
     title: 'Casaco bomber',
     preco: 174,
-    precoAntigo: 249,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Pronto a vestir',
@@ -1462,7 +1478,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/5418541/pexels-photo-5418541.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Casaco bomber em tom castanho, da coleção Mulher, com corte cuidado, materiais selecionados e acabamento de inspiração premium. A proposta foi pensada para a categoria de casacos, integrando pronto a vestir com conforto, presença e versatilidade.',
     materiais: 'Mistura de lã com poliamida para maior resistência, forro em viscose, entretelas estruturadas e botões de corozo ou resina premium.',
-    campanha: 'Até 30%',
   },
   {
     id: 102,
@@ -1499,7 +1514,6 @@ const produtos = [
     id: 104,
     title: 'Camisa em linho',
     preco: 55,
-    precoAntigo: 109,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Pronto a vestir',
@@ -1510,7 +1524,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/10812253/pexels-photo-10812253.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Camisa em linho em tom azul claro, da coleção Mulher, com corte cuidado, materiais selecionados e acabamento de inspiração premium. A proposta foi pensada para a categoria de camisas, integrando pronto a vestir com conforto, presença e versatilidade.',
     materiais: 'Linho europeu com algodão para maior suavidade, botões em madrepérola sintética e costuras reforçadas.',
-    campanha: 'Até 50%',
   },
   {
     id: 105,
@@ -1546,7 +1559,6 @@ const produtos = [
     id: 107,
     title: 'Camisa fluida',
     preco: 112,
-    precoAntigo: 149,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Pronto a vestir',
@@ -1714,7 +1726,6 @@ const produtos = [
     id: 118,
     title: 'Saia evasé',
     preco: 97,
-    precoAntigo: 139,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Pronto a vestir',
@@ -1725,7 +1736,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/28114342/pexels-photo-28114342.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Saia evasé em tom preto, da coleção Mulher, com corte cuidado, materiais selecionados e acabamento de inspiração premium. A proposta foi pensada para a categoria de saias, integrando pronto a vestir com conforto, presença e versatilidade.',
     materiais: 'Viscose premium com poliéster reciclado para estabilidade, forro leve e costuras interiores limpas.',
-    campanha: 'Até 30%',
   },
   {
     id: 119,
@@ -2034,7 +2044,6 @@ const produtos = [
     id: 139,
     title: 'Mocassins em pele',
     preco: 119,
-    precoAntigo: 159,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Sapatos',
@@ -2096,7 +2105,6 @@ const produtos = [
     id: 143,
     title: 'Mocassins flexíveis',
     preco: 95,
-    precoAntigo: 189,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Sapatos',
@@ -2107,7 +2115,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/18031040/pexels-photo-18031040.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Mocassins flexíveis em tom azul marinho, da coleção Mulher, com construção cuidada, linhas elegantes e acabamento de qualidade. O modelo foi pensado para a categoria de mocassins, oferecendo conforto estável e presença discreta em coordenados sofisticados.',
     materiais: 'Exterior em pele ou camurça premium, forro em pele, palmilha confortável e sola em couro com inserção de borracha antiderrapante.',
-    campanha: 'Até 50%',
   },
   {
     id: 144,
@@ -2144,7 +2151,6 @@ const produtos = [
     id: 146,
     title: 'Sapatilhas de lona',
     preco: 109,
-    precoAntigo: 145,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Sapatos',
@@ -2220,7 +2226,6 @@ const produtos = [
     id: 151,
     title: 'Botas Chelsea',
     preco: 139,
-    precoAntigo: 199,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Sapatos',
@@ -2231,7 +2236,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/18031040/pexels-photo-18031040.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Botas Chelsea em tom preto, da coleção Mulher, com construção cuidada, linhas elegantes e acabamento de qualidade. O modelo foi pensado para a categoria de botas, oferecendo conforto estável e presença discreta em coordenados sofisticados.',
     materiais: 'Exterior em pele ou camurça premium, forro em pele, palmilha confortável e sola em couro com inserção de borracha antiderrapante.',
-    campanha: 'Até 30%',
     destaque: 'Novo',
   },
   {
@@ -2359,7 +2363,6 @@ const produtos = [
     id: 160,
     title: 'Carteira de noite',
     preco: 140,
-    precoAntigo: 279,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Malas e beleza',
@@ -2370,7 +2373,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/28114342/pexels-photo-28114342.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Carteira de noite em tom bege, da coleção Mulher, com proporções equilibradas e acabamento refinado. A proposta foi pensada para a categoria de malas de mão, acrescentando funcionalidade e um detalhe elegante ao guarda-roupa.',
     materiais: 'Pele, lona técnica ou nylon premium conforme o modelo, forro têxtil resistente, ferragens metálicas e reforços nas zonas de maior uso.',
-    campanha: 'Até 50%',
   },
   {
     id: 161,
@@ -2604,7 +2606,6 @@ const produtos = [
     id: 182,
     title: 'Echarpe em lã',
     preco: 55,
-    precoAntigo: 79,
     categoriaKey: 'mulher',
     categoria: 'Mulher',
     grupo: 'Malas e beleza',
@@ -2615,7 +2616,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/28114342/pexels-photo-28114342.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Echarpe em lã em tom bege, da coleção Mulher, com proporções equilibradas e acabamento refinado. A proposta foi pensada para a categoria de lenços, acrescentando funcionalidade e um detalhe elegante ao guarda-roupa.',
     materiais: 'Seda, lã fina ou modal conforme o modelo, acabamento delicado nas extremidades e toque leve sobre a pele.',
-    campanha: 'Até 30%',
   },
   {
     id: 183,
@@ -2924,7 +2924,6 @@ const produtos = [
     id: 203,
     title: 'Sweatshirt estampada',
     preco: 56,
-    precoAntigo: 75,
     categoriaKey: 'crianca',
     categoria: 'Criança',
     grupo: 'Roupa',
@@ -3107,7 +3106,6 @@ const produtos = [
     id: 215,
     title: 'Pijama de inverno',
     preco: 33,
-    precoAntigo: 65,
     categoriaKey: 'crianca',
     categoria: 'Criança',
     grupo: 'Roupa',
@@ -3118,7 +3116,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/18020063/pexels-photo-18020063.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Pijama de inverno em tom cinzento, da coleção Criança, com toque suave, construção resistente e acabamento confortável. A proposta foi pensada para a categoria de pijamas, acompanhando movimento e uso diário com cuidado.',
     materiais: 'Algodão suave com fibras resistentes, pequena percentagem de elastano quando necessário, costuras confortáveis e acabamentos pensados para uso diário.',
-    campanha: 'Até 50%',
   },
   {
     id: 216,
@@ -3321,7 +3318,6 @@ const produtos = [
     id: 229,
     title: 'Botas Chelsea',
     preco: 55,
-    precoAntigo: 79,
     categoriaKey: 'crianca',
     categoria: 'Criança',
     grupo: 'Sapatos',
@@ -3332,7 +3328,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/18020063/pexels-photo-18020063.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Botas Chelsea em tom preto, da coleção Criança, com toque suave, construção resistente e acabamento confortável. A proposta foi pensada para a categoria de botas, acompanhando movimento e uso diário com cuidado.',
     materiais: 'Exterior em pele ou camurça premium, forro em pele, palmilha confortável e sola em couro com inserção de borracha antiderrapante.',
-    campanha: 'Até 30%',
     destaque: 'Novo',
   },
   {
@@ -3414,7 +3409,6 @@ const produtos = [
     id: 241,
     title: 'Mochila escolar',
     preco: 44,
-    precoAntigo: 59,
     categoriaKey: 'crianca',
     categoria: 'Criança',
     grupo: 'Acessórios',
@@ -3688,7 +3682,6 @@ const produtos = [
     id: 265,
     title: 'Jogo de cama em percal',
     preco: 89,
-    precoAntigo: 119,
     categoriaKey: 'casa',
     categoria: 'Casa',
     grupo: 'Quarto e banho',
@@ -3871,7 +3864,6 @@ const produtos = [
     id: 277,
     title: 'Roupão de algodão',
     preco: 62,
-    precoAntigo: 89,
     categoriaKey: 'casa',
     categoria: 'Casa',
     grupo: 'Quarto e banho',
@@ -3882,7 +3874,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/28513849/pexels-photo-28513849.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Roupão de algodão em tom branco. Este artigo foi escolhido pela qualidade dos materiais, pela textura e pelo acabamento cuidado, acrescentando conforto e sofisticação à categoria de roupões.',
     materiais: 'Algodão de felpo de elevada gramagem, toque absorvente, textura macia e acabamento reforçado nas bainhas.',
-    campanha: 'Até 30%',
     destaque: 'Novo',
   },
   {
@@ -4146,7 +4137,6 @@ const produtos = [
     id: 301,
     title: 'Almofada em linho',
     preco: 30,
-    precoAntigo: 59,
     categoriaKey: 'casa',
     categoria: 'Casa',
     grupo: 'Decoração',
@@ -4157,7 +4147,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/28513849/pexels-photo-28513849.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Almofada em linho em tom bege. Este artigo foi escolhido pela qualidade dos materiais, pela textura e pelo acabamento cuidado, acrescentando conforto e sofisticação à categoria de almofadas.',
     materiais: 'Capa em linho, algodão ou veludo conforme o modelo, enchimento em fibra reciclada e fecho discreto.',
-    campanha: 'Até 50%',
     destaque: 'Novo',
   },
   {
@@ -4330,7 +4319,6 @@ const produtos = [
     id: 313,
     title: 'Serviço de mesa em stoneware',
     preco: 119,
-    precoAntigo: 159,
     categoriaKey: 'casa',
     categoria: 'Casa',
     grupo: 'Mesa e bar',
@@ -4513,7 +4501,6 @@ const produtos = [
     id: 325,
     title: 'Shaker em inox',
     preco: 55,
-    precoAntigo: 79,
     categoriaKey: 'casa',
     categoria: 'Casa',
     grupo: 'Mesa e bar',
@@ -4524,7 +4511,6 @@ const produtos = [
     imagem: 'https://images.pexels.com/photos/28513849/pexels-photo-28513849.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1',
     descricao: 'Shaker em inox em tom preto. Este artigo foi escolhido pela qualidade dos materiais, pela textura e pelo acabamento cuidado, acrescentando conforto e sofisticação à categoria de acessórios de bar.',
     materiais: 'Aço inoxidável, vidro e silicone alimentar conforme o artigo, com acabamento resistente à utilização frequente.',
-    campanha: 'Até 30%',
     destaque: 'Novo',
   },
   {
@@ -4606,27 +4592,32 @@ const produtos = [
 
 // Adaptacao dos nomes simples acima para os nomes usados pelos componentes da app.
 // Assim o resto da aplicacao continua a funcionar sem duplicar dados.
-export const products = produtos.map((produto) => ({
-  id: String(produto.id),
-  name: produto.title,
-  categoryKey: produto.categoriaKey,
-  category: produto.categoria,
-  subcategoryGroup: produto.grupo,
-  subcategory: produto.subcategoria,
-  subcategoryPath: getNavigationSubcategoryPath(produto.categoriaKey, produto.subcategoria),
-  type: produto.tipo,
-  color: produto.cor,
-  price: `${produto.preco} EUR`,
-  priceValue: produto.preco,
-  oldPrice: produto.precoAntigo ? `${produto.precoAntigo} EUR` : undefined,
-  saleCampaign: produto.campanha,
-  description: produto.descricao,
-  materials: produto.materiais,
-  sizes: produto.tamanhosValidos,
-  image: produto.imagem,
-  imageAlt: produto.title,
-  badge: produto.precoAntigo ? 'Saldos' : produto.destaque,
-}))
+export const products = produtos.map((produto) => {
+  const saldos = getInfoSaldos(produto)
+  const precoFinal = saldos?.precoFinal ?? produto.preco
+
+  return {
+    id: String(produto.id),
+    name: produto.title,
+    categoryKey: produto.categoriaKey,
+    category: produto.categoria,
+    subcategoryGroup: produto.grupo,
+    subcategory: produto.subcategoria,
+    subcategoryPath: getNavigationSubcategoryPath(produto.categoriaKey, produto.subcategoria),
+    type: produto.tipo,
+    color: produto.cor,
+    price: `${precoFinal} EUR`,
+    priceValue: precoFinal,
+    oldPrice: saldos ? `${saldos.precoAntigo} EUR` : undefined,
+    saleCampaign: saldos?.campanha,
+    description: produto.descricao,
+    materials: produto.materiais,
+    sizes: produto.tamanhosValidos,
+    image: produto.imagem,
+    imageAlt: produto.title,
+    badge: saldos ? 'Saldos' : produto.destaque,
+  }
+})
 
 export const categoryPages = Object.fromEntries(
   navigationItems.map((category) => [

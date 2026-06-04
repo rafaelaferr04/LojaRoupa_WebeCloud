@@ -55,8 +55,8 @@ function ProductPage() {
     navigate('/carrinho')
   }
 
-  function handleFavoriteClick() {
-    const result = toggleFavorite(product.id)
+  async function handleFavoriteClick() {
+    const result = await toggleFavorite(product.id)
 
     if (result?.ok === false) {
       navigate('/conta', { state: { error: result.error } })

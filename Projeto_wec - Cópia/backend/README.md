@@ -5,7 +5,7 @@ REST API em Flask com MongoDB para suporte ao frontend.
 ## Setup
 
 ```powershell
-cd backend
+cd "Projeto_wec - Cópia\backend"
 .\venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
 ```

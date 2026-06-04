@@ -1,0 +1,84 @@
+[
+  {
+    "id": "WEC-20260528001",
+    "userEmail": "rafaela@example.com",
+    "createdAt": "2026-05-28T10:30:00.000Z",
+    "total": 247,
+    "items": [
+      {
+        "itemKey": "2-M",
+        "productId": "2",
+        "name": "Blusão técnico azul",
+        "price": "60 EUR",
+        "priceValue": 60,
+        "image": "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "imageAlt": "Blusão técnico azul",
+        "size": "M",
+        "quantity": 1
+      },
+      {
+        "itemKey": "91-38",
+        "productId": "91",
+        "name": "Sandálias de salto",
+        "price": "83 EUR",
+        "priceValue": 83,
+        "image": "https://images.pexels.com/photos/292999/pexels-photo-292999.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1",
+        "imageAlt": "Sandálias de salto",
+        "size": "38",
+        "quantity": 1
+      },
+      {
+        "itemKey": "126-10",
+        "productId": "126",
+        "name": "Vestido infantil floral",
+        "price": "104 EUR",
+        "priceValue": 104,
+        "image": "https://images.pexels.com/photos/5560019/pexels-photo-5560019.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1",
+        "imageAlt": "Vestido infantil floral",
+        "size": "10",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "id": "WEC-20260419001",
+    "userEmail": "rafaela@example.com",
+    "createdAt": "2026-04-19T16:45:00.000Z",
+    "total": 223,
+    "items": [
+      {
+        "itemKey": "8-L",
+        "productId": "8",
+        "name": "Camisa linho azul claro",
+        "price": "50 EUR",
+        "priceValue": 50,
+        "image": "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+        "imageAlt": "Camisa linho azul claro",
+        "size": "L",
+        "quantity": 1
+      },
+      {
+        "itemKey": "35-M",
+        "productId": "35",
+        "name": "Calças de alfaiataria",
+        "price": "91 EUR",
+        "priceValue": 91,
+        "image": "https://images.pexels.com/photos/5319388/pexels-photo-5319388.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1",
+        "imageAlt": "Calças de alfaiataria",
+        "size": "M",
+        "quantity": 1
+      },
+      {
+        "itemKey": "48-42",
+        "productId": "48",
+        "name": "Sapatos oxford",
+        "price": "82 EUR",
+        "priceValue": 82,
+        "image": "https://images.pexels.com/photos/292999/pexels-photo-292999.jpeg?auto=compress&cs=tinysrgb&w=640&h=800&dpr=1",
+        "imageAlt": "Sapatos oxford",
+        "size": "42",
+        "quantity": 1
+      }
+    ]
+  }
+]

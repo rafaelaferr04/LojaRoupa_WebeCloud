@@ -30,11 +30,11 @@ function CheckoutPage() {
   const formattedDelivery = `${deliveryPrice.toFixed(2).replace('.', ',')} EUR`
   const formattedTotal = `${total.toFixed(2).replace('.', ',')} EUR`
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     if (currentUser) {
-      placeOrder({ items: cart, total })
+      await placeOrder({ items: cart, total })
     } else {
       clearCart()
     }

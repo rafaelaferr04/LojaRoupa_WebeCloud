@@ -4,8 +4,8 @@ import { products } from '../data/storeData.js'
 
 const StoreContext = createContext(null)
 
-const usersKey = 'atelier-wec-users'
 const sessionKey = 'atelier-wec-session'
+const apiUrl = import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:5000'
 
 function readStorage(key, fallback) {
   try {
@@ -21,13 +21,38 @@ function normalizeEmail(email) {
 
 function normalizeUser(user) {
   return {
+    _id: user._id,
     name: user.name || user.email,
     email: normalizeEmail(user.email),
     password: user.password,
     cart: Array.isArray(user.cart) ? user.cart : [],
     favorites: Array.isArray(user.favorites) ? user.favorites : [],
-    orders: Array.isArray(user.orders) ? user.orders : [],
   }
+}
+
+function createOrderId() {
+  return `WEC-${Date.now()}`
+}
+
+function createOrderDate() {
+  return new Date().toISOString()
+}
+
+async function apiRequest(path, options = {}) {
+  const response = await fetch(`${apiUrl}${path}`, {
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers ?? {}),
+    },
+    ...options,
+  })
+
+  if (!response.ok) {
+    const message = await response.text()
+    throw new Error(message || 'Erro ao comunicar com a API.')
+  }
+
+  return response.json()
 }
 
 export function useStore() {
@@ -35,10 +60,8 @@ export function useStore() {
 }
 
 export function StoreProvider({ children }) {
-  const [users, setUsers] = useState(() => {
-    const savedUsers = readStorage(usersKey, [])
-    return Array.isArray(savedUsers) ? savedUsers.map(normalizeUser) : []
-  })
+  const [users, setUsers] = useState([])
+  const [orders, setOrders] = useState([])
   const [user, setUser] = useState(() => readStorage(sessionKey, null))
   const [guestCart, setGuestCart] = useState([])
 
@@ -47,8 +70,35 @@ export function StoreProvider({ children }) {
   const favorites = currentUser?.favorites ?? []
 
   useEffect(() => {
-    localStorage.setItem(usersKey, JSON.stringify(users))
-  }, [users])
+    async function loadUsers() {
+      try {
+        const apiUsers = await apiRequest('/users')
+        setUsers(Array.isArray(apiUsers) ? apiUsers.map(normalizeUser) : [])
+      } catch {
+        setUsers([])
+      }
+    }
+
+    loadUsers()
+  }, [])
+
+  useEffect(() => {
+    async function loadOrders() {
+      if (!currentUser) {
+        setOrders([])
+        return
+      }
+
+      try {
+        const apiOrders = await apiRequest(`/orders?userEmail=${encodeURIComponent(currentUser.email)}`)
+        setOrders(Array.isArray(apiOrders) ? apiOrders : [])
+      } catch {
+        setOrders([])
+      }
+    }
+
+    loadOrders()
+  }, [currentUser?.email])
 
   useEffect(() => {
     if (user) {
@@ -59,38 +109,67 @@ export function StoreProvider({ children }) {
     localStorage.removeItem(sessionKey)
   }, [user])
 
-  function updateUser(email, updates) {
+  async function updateUser(email, updates) {
+    const storedUser = users.find((candidate) => candidate.email === email)
+
+    if (!storedUser?._id) {
+      return null
+    }
+
+    const userToSave = normalizeUser({ ...storedUser, ...updates(storedUser) })
+
     setUsers((currentUsers) =>
-      currentUsers.map((storedUser) =>
-        storedUser.email === email ? { ...storedUser, ...updates(storedUser) } : storedUser,
+      currentUsers.map((candidate) =>
+        candidate.email === email ? userToSave : candidate,
       ),
     )
+
+    const savedUser = await apiRequest(`/users/${userToSave._id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(userToSave),
+    })
+
+    const normalizedUser = normalizeUser(savedUser)
+
+    setUsers((currentUsers) =>
+      currentUsers.map((storedUser) =>
+        storedUser.email === email ? normalizedUser : storedUser,
+      ),
+    )
+
+    return normalizedUser
   }
 
-  function register({ name, email, password }) {
+  async function register({ name, email, password }) {
     const normalizedEmail = normalizeEmail(email)
 
     if (users.some((storedUser) => storedUser.email === normalizedEmail)) {
       return { ok: false, error: 'Este utilizador ja existe.' }
     }
 
-    setUsers([
-      ...users,
-      {
-        name: name.trim(),
-        email: normalizedEmail,
-        password,
-        cart: [],
-        favorites: [],
-        orders: [],
-      },
-    ])
-    setUser(normalizedEmail)
+    try {
+      const createdUser = await apiRequest('/users', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: name.trim(),
+          email: normalizedEmail,
+          password,
+          cart: [],
+          favorites: [],
+          orders: [],
+        }),
+      })
 
-    return { ok: true }
+      setUsers((currentUsers) => [...currentUsers, normalizeUser(createdUser)])
+      setUser(normalizedEmail)
+
+      return { ok: true }
+    } catch {
+      return { ok: false, error: 'Nao foi possivel criar a conta.' }
+    }
   }
 
-  function login(email, password) {
+  async function login(email, password) {
     const normalizedEmail = normalizeEmail(email)
     const storedUser = users.find(
       (candidate) => candidate.email === normalizedEmail && candidate.password === password,
@@ -160,14 +239,15 @@ export function StoreProvider({ children }) {
     saveCart([])
   }
 
-  function placeOrder({ items, total }) {
+  async function placeOrder({ items, total }) {
     if (!currentUser || items.length === 0) {
       return null
     }
 
     const order = {
-      id: `WEC-${Date.now()}`,
-      createdAt: new Date().toISOString(),
+      id: createOrderId(),
+      userEmail: currentUser.email,
+      createdAt: createOrderDate(),
       total,
       items: items.map((item) => ({
         itemKey: item.itemKey,
@@ -182,41 +262,57 @@ export function StoreProvider({ children }) {
       })),
     }
 
-    updateUser(currentUser.email, (storedUser) => ({
-      orders: [order, ...(storedUser.orders ?? [])],
-      cart: [],
-    }))
+    await updateUser(currentUser.email, () => ({ cart: [] }))
+
+    try {
+      const savedOrder = await apiRequest('/orders', {
+        method: 'POST',
+        body: JSON.stringify(order),
+      })
+
+      setOrders((currentOrders) => [savedOrder, ...currentOrders])
+    } catch {
+      setOrders((currentOrders) => [order, ...currentOrders])
+    }
 
     return order
   }
 
-  function requestReturn({ orderId, itemKey }) {
+  async function requestReturn({ orderId, itemKey }) {
     if (!currentUser) {
-      return { ok: false, error: 'Inicie sessão para solicitar uma devolução.' }
+      return { ok: false, error: 'Inicie sessao para solicitar uma devolucao.' }
     }
 
-    updateUser(currentUser.email, (storedUser) => ({
-      orders: (storedUser.orders ?? []).map((order) =>
-        order.id === orderId
-          ? {
-              ...order,
-              items: order.items.map((item) =>
-                item.itemKey === itemKey
-                  ? {
-                      ...item,
-                      returnRequestedAt: new Date().toISOString(),
-                    }
-                  : item,
-              ),
-            }
-          : order,
-      ),
-    }))
+    const updatedOrders = orders.map((order) =>
+      order.id === orderId
+        ? {
+            ...order,
+            items: order.items.map((item) =>
+              item.itemKey === itemKey
+                ? {
+                    ...item,
+                    returnRequestedAt: new Date().toISOString(),
+                  }
+                : item,
+            ),
+          }
+        : order,
+    )
+
+    const updatedOrder = updatedOrders.find((order) => order.id === orderId)
+    setOrders(updatedOrders)
+
+    if (updatedOrder?._id) {
+      await apiRequest(`/orders/${updatedOrder._id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(updatedOrder),
+      })
+    }
 
     return { ok: true }
   }
 
-  function toggleFavorite(productId) {
+  async function toggleFavorite(productId) {
     if (!currentUser) {
       return {
         ok: false,
@@ -228,7 +324,7 @@ export function StoreProvider({ children }) {
       ? favorites.filter((id) => id !== productId)
       : [...favorites, productId]
 
-    updateUser(currentUser.email, () => ({ favorites: nextFavorites }))
+    await updateUser(currentUser.email, () => ({ favorites: nextFavorites }))
 
     return { ok: true }
   }
@@ -245,6 +341,7 @@ export function StoreProvider({ children }) {
   const value = {
     user,
     currentUser,
+    orders,
     login,
     register,
     logout,

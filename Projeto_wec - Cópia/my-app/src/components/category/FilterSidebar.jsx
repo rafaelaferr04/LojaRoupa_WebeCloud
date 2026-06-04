@@ -33,7 +33,7 @@ function FilterSidebar({
 
   function handleClearFilters() {
     setSelectedColors([])
-    setSelectesdPriceRanges([])
+    setSelectedPriceRanges([])
   }
 
   return (
