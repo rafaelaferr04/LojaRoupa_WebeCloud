@@ -10,6 +10,7 @@ import {
 import ProductGrid from '../ProductGrid.jsx'
 import CategoryToolbar from './CategoryToolbar.jsx'
 import FilterSidebar from './FilterSidebar.jsx'
+import { useStore } from '../../context/StoreContext.jsx'
 
 function scrollToProductsStart() {
   document.getElementById('produtos')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -17,6 +18,7 @@ function scrollToProductsStart() {
 
 function CategoryPage({ page }) {
   const location = useLocation()
+  const { withSalesData } = useStore()
   const [selectedColors, setSelectedColors] = useState([])
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([])
   const [sortOrder, setSortOrder] = useState('recommended')
@@ -32,14 +34,15 @@ function CategoryPage({ page }) {
   }, [location.pathname, hasSpecialScroll])
 
   const visibleProducts = useMemo(() => {
+    const productsWithSales = withSalesData(page.products)
     const filteredProducts = filterProducts(
-      page.products,
+      productsWithSales,
       selectedColors,
       selectedPriceRanges,
     )
 
     return sortProducts(filteredProducts, sortOrder)
-  }, [page.products, selectedColors, selectedPriceRanges, sortOrder])
+  }, [page.products, selectedColors, selectedPriceRanges, sortOrder, withSalesData])
 
   useEffect(() => {
     if (typeof location.state?.restoreScrollY === 'number') {

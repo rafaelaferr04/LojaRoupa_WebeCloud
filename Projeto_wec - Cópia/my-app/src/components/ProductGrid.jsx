@@ -7,7 +7,7 @@ function scrollToProductsStart() {
   document.getElementById('produtos')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
-const productsPerPage = 32
+const productsPerPage = 36
 
 function getPageItems(items, currentPage, itemsPerPage) {
   const startIndex = (currentPage - 1) * itemsPerPage

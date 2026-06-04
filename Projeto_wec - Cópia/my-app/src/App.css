@@ -1181,19 +1181,24 @@
 }
 
 .auth-tab {
+  align-items: center;
   background: transparent;
   border: 0;
   border-bottom: 3px solid transparent;
   color: #9a9080;
   cursor: pointer;
+  display: inline-flex;
   flex: 1;
   font-size: 0.78rem;
   font-weight: 800;
+  justify-content: center;
   letter-spacing: 0.08rem;
   min-height: 58px;
+  min-width: 0;
   padding: 18px 20px 16px;
   text-transform: uppercase;
   transition: background 0.2s, color 0.2s, border-color 0.2s;
+  white-space: nowrap;
 }
 
 .auth-tab.is-active {
@@ -1558,10 +1563,123 @@
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .account-page {
+    gap: 18px;
+    grid-template-columns: minmax(260px, 470px) minmax(220px, 360px);
+    padding: 44px 20px 56px;
+  }
+
+  .account-history {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .account-card,
+  .search-page {
+    padding: 22px;
+  }
+
+  .account-auth {
+    padding: 0;
+  }
+
+  .account-card h2 {
+    font-size: 1.34rem;
+  }
+
+  .account-card p,
+  .search-page p {
+    font-size: 0.92rem;
+    line-height: 1.48;
+  }
+
+  .account-card label,
+  .search-page label {
+    font-size: 0.7rem;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+
+  .account-card input,
+  .search-page input {
+    font-size: 0.9rem;
+    padding: 11px 12px;
+  }
+
   .checkout-page {
     grid-template-columns: minmax(260px, 560px) minmax(220px, 280px);
     padding-left: 20px;
     padding-right: 20px;
+  }
+}
+
+@media (max-width: 820px) {
+  .account-page {
+    gap: 12px;
+    grid-template-columns: minmax(230px, 1.08fr) minmax(190px, 0.92fr);
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .account-history {
+    gap: 18px;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .account-card,
+  .search-page {
+    padding: 16px;
+  }
+
+  .account-auth {
+    padding: 0;
+  }
+
+  .account-card h2 {
+    font-size: 1.12rem;
+    margin-bottom: 8px;
+  }
+
+  .account-card p,
+  .search-page p {
+    font-size: 0.78rem;
+    line-height: 1.38;
+  }
+
+  .account-field-row {
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+  }
+
+  .account-field-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.06rem;
+  }
+
+  .account-field-value {
+    font-size: 0.82rem;
+  }
+
+  .account-logout-btn,
+  .account-newsletter-card button {
+    font-size: 0.62rem;
+    letter-spacing: 0.05rem;
+    padding: 8px 10px;
+  }
+
+  .auth-tab {
+    font-size: 0.68rem;
+    letter-spacing: 0.04rem;
+    min-height: 48px;
+    padding: 13px 8px 11px;
+  }
+
+  .auth-submit {
+    font-size: 0.72rem;
+    letter-spacing: 0.05rem;
+    min-height: 46px;
+    padding: 12px 14px;
   }
 }
 
@@ -1600,6 +1718,30 @@
 
   .checkout-summary {
     position: static;
+  }
+}
+
+@media (max-width: 520px) {
+  .account-page {
+    grid-template-columns: 1fr;
+  }
+
+  .account-card,
+  .search-page {
+    padding: 18px;
+  }
+
+  .account-auth {
+    padding: 0;
+  }
+
+  .account-card h2 {
+    font-size: 1.28rem;
+  }
+
+  .account-card p,
+  .search-page p {
+    font-size: 0.86rem;
   }
 }
 
@@ -1642,7 +1784,6 @@
 
   .product-detail,
   .cart-page,
-  .account-page,
   .info-content {
     grid-template-columns: 1fr;
   }

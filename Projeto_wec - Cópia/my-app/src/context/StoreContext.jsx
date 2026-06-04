@@ -1,5 +1,5 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { products } from '../data/storeData.js'
 
 const StoreContext = createContext(null)
@@ -42,6 +42,13 @@ function createOrderDate() {
   return new Date().toISOString()
 }
 
+function sortOrdersByDate(ordersToSort) {
+  return [...ordersToSort].sort(
+    (firstOrder, secondOrder) =>
+      new Date(secondOrder.createdAt).getTime() - new Date(firstOrder.createdAt).getTime(),
+  )
+}
+
 async function apiRequest(path, options = {}) {
   const response = await fetch(`${apiUrl}${path}`, {
     headers: {
@@ -66,6 +73,7 @@ export function useStore() {
 export function StoreProvider({ children }) {
   const [users, setUsers] = useState([])
   const [orders, setOrders] = useState([])
+  const [productSales, setProductSales] = useState({})
   const [user, setUser] = useState(() => readStorage(sessionKey, null))
   const [guestCart, setGuestCart] = useState([])
 
@@ -87,6 +95,29 @@ export function StoreProvider({ children }) {
   }, [])
 
   useEffect(() => {
+    async function loadProductSales() {
+      try {
+        const apiSales = await apiRequest('/api/v1/products/sales')
+        const nextSales = Object.fromEntries(
+          apiSales.map((sale) => [
+            String(sale.productId),
+            {
+              totalSales: sale.totalSales ?? 0,
+              weeklySales: sale.weeklySales ?? 0,
+            },
+          ]),
+        )
+
+        setProductSales(nextSales)
+      } catch {
+        setProductSales({})
+      }
+    }
+
+    loadProductSales()
+  }, [])
+
+  useEffect(() => {
     async function loadOrders() {
       if (!currentUser) {
         setOrders([])
@@ -95,7 +126,7 @@ export function StoreProvider({ children }) {
 
       try {
         const apiOrders = await apiRequest(`/orders?userEmail=${encodeURIComponent(currentUser.email)}`)
-        setOrders(Array.isArray(apiOrders) ? apiOrders : [])
+        setOrders(Array.isArray(apiOrders) ? sortOrdersByDate(apiOrders) : [])
       } catch {
         setOrders([])
       }
@@ -274,9 +305,9 @@ export function StoreProvider({ children }) {
         body: JSON.stringify(order),
       })
 
-      setOrders((currentOrders) => [savedOrder, ...currentOrders])
+      setOrders((currentOrders) => sortOrdersByDate([savedOrder, ...currentOrders]))
     } catch {
-      setOrders((currentOrders) => [order, ...currentOrders])
+      setOrders((currentOrders) => sortOrdersByDate([order, ...currentOrders]))
     }
 
     return order
@@ -305,7 +336,7 @@ export function StoreProvider({ children }) {
 
     const updatedOrder = updatedOrders.find((order) => order.id === orderId)
     const updatedItem = updatedOrder?.items.find((item) => item.itemKey === itemKey)
-    setOrders(updatedOrders)
+    setOrders(sortOrdersByDate(updatedOrders))
 
     if (updatedOrder?._id) {
       await apiRequest(`/orders/${updatedOrder._id}`, {
@@ -392,8 +423,16 @@ export function StoreProvider({ children }) {
     }
   }
 
+  const withSalesData = useCallback((productsToRead) => {
+    return productsToRead.map((product) => ({
+      ...product,
+      totalSales: productSales[product.id]?.totalSales ?? 0,
+      weeklySales: productSales[product.id]?.weeklySales ?? 0,
+    }))
+  }, [productSales])
+
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0)
-  const favoriteProducts = products.filter((product) => favorites.includes(product.id))
+  const favoriteProducts = withSalesData(products).filter((product) => favorites.includes(product.id))
 
   const value = {
     user,
@@ -412,6 +451,7 @@ export function StoreProvider({ children }) {
     requestReturn,
     subscribeNewsletter,
     cancelNewsletter,
+    withSalesData,
     favorites,
     favoriteCount: favorites.length,
     favoriteProducts,

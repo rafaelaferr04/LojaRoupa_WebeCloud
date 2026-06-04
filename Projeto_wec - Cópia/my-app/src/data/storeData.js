@@ -128,6 +128,21 @@ export function getProductById(productId) {
   return products.find((product) => product.id === productId)
 }
 
+export function getTopWeeklyProducts(limit, productsToRank = products, fallbackProducts = []) {
+  const weeklyProducts = productsToRank
+    .filter((product) => product.weeklySales > 0)
+    .sort((firstProduct, secondProduct) => secondProduct.weeklySales - firstProduct.weeklySales)
+
+  if (weeklyProducts.length >= limit) {
+    return weeklyProducts.slice(0, limit)
+  }
+
+  const selectedIds = new Set(weeklyProducts.map((product) => product.id))
+  const fallback = fallbackProducts.filter((product) => !selectedIds.has(product.id))
+
+  return [...weeklyProducts, ...fallback].slice(0, limit)
+}
+
 export const products = produtos.map((produto) => {
   const saldos = getInfoSaldos(produto)
   const precoFinal = saldos?.precoFinal ?? produto.preco
@@ -152,6 +167,8 @@ export const products = produtos.map((produto) => {
     image: produto.imagem,
     imageAlt: produto.title,
     badge: saldos ? 'Saldos' : produto.destaque,
+    totalSales: 0,
+    weeklySales: 0,
   }
 })
 

@@ -400,6 +400,7 @@ def index():
                 "/api/v1/products/total",
                 "/api/v1/products/categorias/<categorias>",
                 "/api/v1/products/price",
+                "/api/v1/products/sales",
                 "/api/v1/user/signup",
                 "/api/v1/user/login",
                 "/api/v1/user/confirmation",
@@ -546,6 +547,47 @@ def api_get_products_by_price():
     query = {"priceValue": {"$gte": min_price, "$lte": max_price}}
 
     return paginated_products(query, [("priceValue", sort_direction)])
+
+
+@app.route("/api/v1/products/sales", methods=["GET"])
+def api_get_product_sales():
+    week_start = now_utc() - timedelta(days=7)
+
+    try:
+        orders = list(db.orders.find({}))
+    except PyMongoError as error:
+        return json_error(str(error), 500)
+
+    sales_by_product = {}
+
+    for order in orders:
+        order_date = order.get("createdAt")
+
+        if isinstance(order_date, str):
+            try:
+                order_date = datetime.fromisoformat(order_date.replace("Z", "+00:00"))
+            except ValueError:
+                order_date = None
+
+        if isinstance(order_date, datetime) and order_date.tzinfo is None:
+            order_date = order_date.replace(tzinfo=timezone.utc)
+
+        is_weekly_order = isinstance(order_date, datetime) and order_date >= week_start
+
+        for item in order.get("items", []):
+            product_id = str(item.get("productId"))
+            quantity = item.get("quantity", 1)
+
+            sales_by_product.setdefault(
+                product_id,
+                {"productId": product_id, "totalSales": 0, "weeklySales": 0},
+            )
+            sales_by_product[product_id]["totalSales"] += quantity
+
+            if is_weekly_order:
+                sales_by_product[product_id]["weeklySales"] += quantity
+
+    return jsonify(list(sales_by_product.values()))
 
 
 @app.route("/api/v1/user/signup", methods=["POST"])

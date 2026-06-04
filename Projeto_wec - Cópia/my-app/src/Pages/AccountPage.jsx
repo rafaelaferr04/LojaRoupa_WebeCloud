@@ -116,6 +116,10 @@ function AccountPage() {
           orderDate: order.createdAt,
         })),
       )
+      .sort(
+        (firstItem, secondItem) =>
+          new Date(secondItem.orderDate).getTime() - new Date(firstItem.orderDate).getTime(),
+      )
 
     return (
       <>
@@ -354,6 +358,7 @@ function AccountPage() {
             <ul className="account-benefits">
               <li>Carrinho guardado por conta</li>
               <li>Favoritos guardados por conta</li>
+              <li>Histórico de compras e devoluções facilitadas</li>
               <li>Acesso rápido em futuras visitas</li>
             </ul>
             <p className="account-note">

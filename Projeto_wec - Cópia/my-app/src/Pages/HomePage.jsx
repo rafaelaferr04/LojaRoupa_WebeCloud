@@ -3,9 +3,12 @@ import { Link } from 'react-router-dom'
 import Footer from '../Footer.jsx'
 import Header from '../Header.jsx'
 import ProductGrid from '../components/ProductGrid.jsx'
-import { categoryPages } from '../data/storeData.js'
+import { useStore } from '../context/StoreContext.jsx'
+import { categoryPages, getTopWeeklyProducts, products } from '../data/storeData.js'
 
 function HomePage() {
+  const { withSalesData } = useStore()
+
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
@@ -35,11 +38,16 @@ function HomePage() {
     },
   ].filter((collection) => collection.section)
 
-  const featuredProducts = [
+  const fallbackFeaturedProducts = [
     ...categoryPages.mulher.sections[0].products.slice(0, 2),
     ...categoryPages.homem.sections[0].products.slice(2, 4),
     ...categoryPages.casa.sections[0].products.slice(0, 2),
   ]
+  const featuredProducts = getTopWeeklyProducts(
+    8,
+    withSalesData(products),
+    fallbackFeaturedProducts,
+  )
 
   return (
     <>
