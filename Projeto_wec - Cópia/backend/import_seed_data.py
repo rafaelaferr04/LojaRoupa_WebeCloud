@@ -8,6 +8,7 @@ from pymongo import MongoClient
 
 BASE_DIR = Path(__file__).resolve().parent
 FRONTEND_DIR = BASE_DIR.parent / "my-app"
+DATA_DIR = FRONTEND_DIR / "src" / "data"
 
 mongo_connection_string = os.environ.get("MONGODB_CONNECTION_STRING")
 database_name = os.environ.get("DATABASE_NAME", "atelier_wec")
@@ -26,7 +27,7 @@ db = client[database_name]
 
 
 def load_json(filename):
-    path = FRONTEND_DIR / filename
+    path = DATA_DIR / filename
 
     with path.open("r", encoding="utf-8") as file:
         return json.load(file)
