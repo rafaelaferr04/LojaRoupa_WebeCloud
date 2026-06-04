@@ -3,8 +3,11 @@ import hashlib
 import hmac
 import json
 import os
+import re
 import secrets
+import smtplib
 from datetime import datetime, timedelta, timezone
+from email.message import EmailMessage
 from functools import wraps
 
 from bson import ObjectId
@@ -20,6 +23,11 @@ CORS(app)
 mongo_connection_string = os.environ.get("MONGODB_CONNECTION_STRING", "MONGODB_CONECTION_STRING")
 database_name = os.environ.get("DATABASE_NAME", "DATABASE_NAME")
 jwt_secret = os.environ.get("JWT_SECRET", "atelier-wec-dev-secret")
+smtp_host = os.environ.get("SMTP_HOST")
+smtp_port = int(os.environ.get("SMTP_PORT", "587"))
+smtp_user = os.environ.get("SMTP_USER")
+smtp_password = os.environ.get("SMTP_PASSWORD")
+smtp_from = os.environ.get("SMTP_FROM", smtp_user or "noreply@atelierwec.pt")
 
 client = MongoClient(
     mongo_connection_string,
@@ -28,9 +36,23 @@ client = MongoClient(
 )
 db = client[database_name]
 
+newsletter_message = """Agradecemos por se subscrever à newsletter de Atelier WEC. Vai poder estar a par de todas as nossas novidades e promoções especiais.
+
+Atentamente,
+Equipa Atelier WEC"""
+
+return_message = """Lamentamos que não tenha ficado satisfeito com o seu produto, será contactado pela empresa de envio brevemente para saber como devolver a encomenda.
+
+Atentamente,
+Equipa Atelier WEC"""
+
 
 def json_error(message, status_code):
     return jsonify({"error": message}), status_code
+
+
+def is_valid_email(email):
+    return bool(re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email or ""))
 
 
 def now_utc():
@@ -63,6 +85,29 @@ def serialize_document(document):
 
 def serialize_documents(documents):
     return [serialize_document(document) for document in documents]
+
+
+def send_email(to_email, subject, body):
+    if not all([smtp_host, smtp_user, smtp_password, smtp_from]):
+        return False, "SMTP nao configurado."
+
+    message = EmailMessage()
+    message["From"] = smtp_from
+    message["To"] = to_email
+    message["Subject"] = subject
+    message.set_content(body)
+
+    try:
+        with smtplib.SMTP(smtp_host, smtp_port) as server:
+            server.starttls()
+            server.login(smtp_user, smtp_password)
+            server.send_message(message)
+    except OSError as error:
+        return False, str(error)
+    except smtplib.SMTPException as error:
+        return False, str(error)
+
+    return True, None
 
 
 def get_pagination():
@@ -358,6 +403,9 @@ def index():
                 "/api/v1/user/signup",
                 "/api/v1/user/login",
                 "/api/v1/user/confirmation",
+                "/api/v1/newsletter",
+                "/api/v1/newsletter/cancel",
+                "/api/v1/returns",
             ],
         }
     )
@@ -527,6 +575,7 @@ def api_signup():
             "passwordHash": create_password_hash(password),
             "confirmed": False,
             "role": "user",
+            "newsletterSubscribed": False,
             "cart": [],
             "favorites": [],
             "createdAt": now_utc(),
@@ -597,6 +646,128 @@ def api_confirm_user():
         return json_error(str(error), 500)
 
     return jsonify(serialize_document(user))
+
+
+@app.route("/api/v1/newsletter", methods=["POST"])
+def api_newsletter_signup():
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
+        return json_error("O corpo do pedido deve ser um objeto JSON.", 400)
+
+    email = (data.get("email") or "").strip().lower()
+
+    if not is_valid_email(email):
+        return json_error("Email invalido.", 400)
+
+    sent, send_error = send_email(
+        email,
+        "Subscrição da newsletter Atelier WEC",
+        newsletter_message,
+    )
+
+    subscriber = {
+        "email": email,
+        "message": newsletter_message,
+        "emailSent": sent,
+        "emailError": send_error,
+        "createdAt": now_utc(),
+        "updatedAt": now_utc(),
+    }
+
+    try:
+        db.newsletterSubscribers.update_one(
+            {"email": email},
+            {"$set": subscriber},
+            upsert=True,
+        )
+        saved_subscriber = db.newsletterSubscribers.find_one({"email": email})
+    except PyMongoError as error:
+        return json_error(str(error), 500)
+
+    try:
+        db.users.update_one(
+            {"email": email},
+            {"$set": {"newsletterSubscribed": True, "updatedAt": now_utc()}},
+        )
+    except PyMongoError as error:
+        return json_error(str(error), 500)
+
+    return jsonify(serialize_document(saved_subscriber)), 201
+
+
+@app.route("/api/v1/newsletter/cancel", methods=["POST"])
+def api_cancel_newsletter():
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
+        return json_error("O corpo do pedido deve ser um objeto JSON.", 400)
+
+    email = (data.get("email") or "").strip().lower()
+
+    if not is_valid_email(email):
+        return json_error("Email invalido.", 400)
+
+    try:
+        db.newsletterSubscribers.update_one(
+            {"email": email},
+            {
+                "$set": {
+                    "cancelledAt": now_utc(),
+                    "newsletterSubscribed": False,
+                    "updatedAt": now_utc(),
+                }
+            },
+            upsert=True,
+        )
+        db.users.update_one(
+            {"email": email},
+            {"$set": {"newsletterSubscribed": False, "updatedAt": now_utc()}},
+        )
+    except PyMongoError as error:
+        return json_error(str(error), 500)
+
+    return jsonify({"cancelled": True, "email": email})
+
+
+@app.route("/api/v1/returns", methods=["POST"])
+def api_create_return_request():
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
+        return json_error("O corpo do pedido deve ser um objeto JSON.", 400)
+
+    email = (data.get("userEmail") or data.get("email") or "").strip().lower()
+
+    if not is_valid_email(email):
+        return json_error("Email invalido.", 400)
+
+    sent, send_error = send_email(
+        email,
+        "Instruções de devolução Atelier WEC",
+        return_message,
+    )
+
+    return_request = {
+        "userEmail": email,
+        "orderId": data.get("orderId"),
+        "itemKey": data.get("itemKey"),
+        "productId": data.get("productId"),
+        "productName": data.get("productName"),
+        "message": return_message,
+        "emailSent": sent,
+        "emailError": send_error,
+        "createdAt": now_utc(),
+        "updatedAt": now_utc(),
+    }
+
+    try:
+        result = db.returns.insert_one(return_request)
+        saved_return = db.returns.find_one({"_id": result.inserted_id})
+    except PyMongoError as error:
+        return json_error(str(error), 500)
+
+    return jsonify(serialize_document(saved_return)), 201
 
 
 # Rotas antigas mantidas para a app React atual.

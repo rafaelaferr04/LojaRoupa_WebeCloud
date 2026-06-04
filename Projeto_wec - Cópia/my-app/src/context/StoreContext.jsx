@@ -22,9 +22,13 @@ function normalizeEmail(email) {
 function normalizeUser(user) {
   return {
     _id: user._id,
+    username: user.username,
     name: user.name || user.email,
     email: normalizeEmail(user.email),
     password: user.password,
+    confirmed: user.confirmed,
+    role: user.role,
+    newsletterSubscribed: Boolean(user.newsletterSubscribed),
     cart: Array.isArray(user.cart) ? user.cart : [],
     favorites: Array.isArray(user.favorites) ? user.favorites : [],
   }
@@ -154,9 +158,9 @@ export function StoreProvider({ children }) {
           name: name.trim(),
           email: normalizedEmail,
           password,
+          newsletterSubscribed: false,
           cart: [],
           favorites: [],
-          orders: [],
         }),
       })
 
@@ -300,6 +304,7 @@ export function StoreProvider({ children }) {
     )
 
     const updatedOrder = updatedOrders.find((order) => order.id === orderId)
+    const updatedItem = updatedOrder?.items.find((item) => item.itemKey === itemKey)
     setOrders(updatedOrders)
 
     if (updatedOrder?._id) {
@@ -309,7 +314,59 @@ export function StoreProvider({ children }) {
       })
     }
 
+    await apiRequest('/api/v1/returns', {
+      method: 'POST',
+      body: JSON.stringify({
+        userEmail: currentUser.email,
+        orderId,
+        itemKey,
+        productId: updatedItem?.productId,
+        productName: updatedItem?.name,
+      }),
+    })
+
     return { ok: true }
+  }
+
+  async function subscribeNewsletter() {
+    if (!currentUser) {
+      return {
+        ok: false,
+        error: 'Para subscrever a newsletter, inicie sessao na sua conta.',
+      }
+    }
+
+    try {
+      const result = await apiRequest('/api/v1/newsletter', {
+        method: 'POST',
+        body: JSON.stringify({ email: currentUser.email }),
+      })
+
+      await updateUser(currentUser.email, () => ({ newsletterSubscribed: true }))
+
+      return { ok: true, emailSent: result.emailSent }
+    } catch {
+      return { ok: false, error: 'Nao foi possivel subscrever a newsletter.' }
+    }
+  }
+
+  async function cancelNewsletter() {
+    if (!currentUser) {
+      return { ok: false, error: 'Inicie sessao na sua conta.' }
+    }
+
+    try {
+      await apiRequest('/api/v1/newsletter/cancel', {
+        method: 'POST',
+        body: JSON.stringify({ email: currentUser.email }),
+      })
+
+      await updateUser(currentUser.email, () => ({ newsletterSubscribed: false }))
+
+      return { ok: true }
+    } catch {
+      return { ok: false, error: 'Nao foi possivel cancelar a newsletter.' }
+    }
   }
 
   async function toggleFavorite(productId) {
@@ -353,6 +410,8 @@ export function StoreProvider({ children }) {
     clearCart,
     placeOrder,
     requestReturn,
+    subscribeNewsletter,
+    cancelNewsletter,
     favorites,
     favoriteCount: favorites.length,
     favoriteProducts,

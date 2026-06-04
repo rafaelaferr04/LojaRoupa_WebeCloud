@@ -1514,6 +1514,45 @@
   color: #1c1510;
 }
 
+.account-newsletter-card {
+  align-items: center;
+  display: flex;
+  gap: 18px;
+  justify-content: space-between;
+}
+
+.account-newsletter-card h2 {
+  margin-bottom: 6px;
+}
+
+.account-newsletter-card p {
+  margin: 0;
+}
+
+.account-newsletter-card button {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--ink);
+  cursor: pointer;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08rem;
+  padding: 10px 14px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.account-newsletter-card button:hover {
+  background: var(--gold);
+}
+
+.account-newsletter-message {
+  color: var(--muted);
+  font-size: 0.86rem;
+  margin: -10px 0 0;
+  text-align: center;
+}
+
 @media (max-width: 1080px) {
   .product-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1523,6 +1562,19 @@
     grid-template-columns: minmax(260px, 560px) minmax(220px, 280px);
     padding-left: 20px;
     padding-right: 20px;
+  }
+}
+
+@media (max-width: 560px) {
+  .account-newsletter-card {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .account-newsletter-card button {
+    white-space: normal;
+    width: 100%;
   }
 }
 

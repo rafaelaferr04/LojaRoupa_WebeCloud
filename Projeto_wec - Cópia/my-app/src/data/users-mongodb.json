@@ -6,6 +6,7 @@
     "password": "123456",
     "confirmed": true,
     "role": "user",
+    "newsletterSubscribed": false,
     "cart": [],
     "favorites": ["2", "8", "91"]
   },
@@ -16,6 +17,7 @@
     "password": "admin123",
     "confirmed": true,
     "role": "admin",
+    "newsletterSubscribed": false,
     "cart": [],
     "favorites": []
   }

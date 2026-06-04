@@ -29,7 +29,15 @@ function formatOrderDate(date) {
 function AccountPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { currentUser, login, logout, orders, register, requestReturn } = useStore()
+  const {
+    cancelNewsletter,
+    currentUser,
+    login,
+    logout,
+    orders,
+    register,
+    requestReturn,
+  } = useStore()
   const [isRegister, setIsRegister] = useState(false)
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -37,6 +45,7 @@ function AccountPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState(location.state?.error ?? '')
   const [returnMessage, setReturnMessage] = useState('')
+  const [newsletterMessage, setNewsletterMessage] = useState('')
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -84,6 +93,17 @@ function AccountPage() {
     if (result.ok) {
       setReturnMessage(`Pedido de devolução registado. Enviámos as instruções para ${currentUser.email}.`)
     }
+  }
+
+  async function handleCancelNewsletter() {
+    setNewsletterMessage('')
+    const result = await cancelNewsletter()
+
+    setNewsletterMessage(
+      result.ok
+        ? 'Subscrição da newsletter cancelada.'
+        : result.error,
+    )
   }
 
   if (currentUser) {
@@ -208,6 +228,22 @@ function AccountPage() {
                 </div>
               )}
             </details>
+
+            {currentUser.newsletterSubscribed && (
+              <div className="account-card account-newsletter-card">
+                <div>
+                  <h2>Newsletter</h2>
+                  <p>Está subscrito às novidades e promoções especiais do Atelier WEC.</p>
+                </div>
+                <button type="button" onClick={handleCancelNewsletter}>
+                  Cancelar newsletter
+                </button>
+              </div>
+            )}
+
+            {newsletterMessage && (
+              <p className="account-newsletter-message">{newsletterMessage}</p>
+            )}
           </section>
         </main>
         <Footer />
