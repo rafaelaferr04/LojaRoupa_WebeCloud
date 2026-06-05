@@ -552,6 +552,7 @@ def api_get_products_by_price():
 @app.route("/api/v1/products/sales", methods=["GET"])
 def api_get_product_sales():
     week_start = now_utc() - timedelta(days=7)
+    year_start = now_utc() - timedelta(days=365)
 
     try:
         orders = list(db.orders.find({}))
@@ -572,6 +573,7 @@ def api_get_product_sales():
         if isinstance(order_date, datetime) and order_date.tzinfo is None:
             order_date = order_date.replace(tzinfo=timezone.utc)
 
+        is_year_order = isinstance(order_date, datetime) and order_date >= year_start
         is_weekly_order = isinstance(order_date, datetime) and order_date >= week_start
 
         for item in order.get("items", []):
@@ -582,7 +584,9 @@ def api_get_product_sales():
                 product_id,
                 {"productId": product_id, "totalSales": 0, "weeklySales": 0},
             )
-            sales_by_product[product_id]["totalSales"] += quantity
+
+            if is_year_order:
+                sales_by_product[product_id]["totalSales"] += quantity
 
             if is_weekly_order:
                 sales_by_product[product_id]["weeklySales"] += quantity

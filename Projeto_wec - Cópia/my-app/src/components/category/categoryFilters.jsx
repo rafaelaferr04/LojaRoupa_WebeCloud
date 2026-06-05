@@ -33,12 +33,12 @@ export function filterProducts(productsToFilter, selectedColors, selectedPriceRa
 
 export function sortProducts(productsToSort, sortOrder) {
   const sortedProducts = [...productsToSort]
-  const hasSalesData = sortedProducts.some((product) => product.totalSales > 0)
 
-  if (sortOrder === 'recommended' && hasSalesData) {
+  if (sortOrder === 'recommended') {
     return sortedProducts.sort(
       (firstProduct, secondProduct) =>
-        (secondProduct.totalSales ?? 0) - (firstProduct.totalSales ?? 0),
+        (secondProduct.totalSales ?? 0) - (firstProduct.totalSales ?? 0) ||
+        Number(firstProduct.id) - Number(secondProduct.id),
     )
   }
 

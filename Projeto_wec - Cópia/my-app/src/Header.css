@@ -19,10 +19,10 @@
 .top-bar {
   background-color: #1c1510;
   color: var(--gold);
-  font-size: 0.68rem;
+  font-size: clamp(0.52rem, 1.5vw, 0.68rem);
   font-weight: 700;
-  letter-spacing: 0.08rem;
-  padding: 10px 20px;
+  letter-spacing: clamp(0.035rem, 0.8vw, 0.08rem);
+  padding: clamp(6px, 1.6vw, 10px) clamp(8px, 3vw, 20px);
   text-align: center;
   text-transform: uppercase;
 }

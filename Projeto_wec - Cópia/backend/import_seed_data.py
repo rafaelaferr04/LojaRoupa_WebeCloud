@@ -59,14 +59,18 @@ def import_users():
 def import_orders():
     orders = load_json("orders-mongodb.json")
     imported = 0
+    user_emails = {
+        order["userEmail"].strip().lower()
+        for order in orders
+        if order.get("userEmail")
+    }
+
+    if user_emails:
+        db.orders.delete_many({"userEmail": {"$in": list(user_emails)}})
 
     for order in orders:
         order = add_timestamps(order)
-        db.orders.update_one(
-            {"id": order["id"]},
-            {"$set": order},
-            upsert=True,
-        )
+        db.orders.insert_one(order)
         imported += 1
 
     return imported

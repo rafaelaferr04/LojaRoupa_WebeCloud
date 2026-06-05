@@ -131,7 +131,11 @@ export function getProductById(productId) {
 export function getTopWeeklyProducts(limit, productsToRank = products, fallbackProducts = []) {
   const weeklyProducts = productsToRank
     .filter((product) => product.weeklySales > 0)
-    .sort((firstProduct, secondProduct) => secondProduct.weeklySales - firstProduct.weeklySales)
+    .sort(
+      (firstProduct, secondProduct) =>
+        (secondProduct.weeklySales ?? 0) - (firstProduct.weeklySales ?? 0) ||
+        (secondProduct.totalSales ?? 0) - (firstProduct.totalSales ?? 0),
+    )
 
   if (weeklyProducts.length >= limit) {
     return weeklyProducts.slice(0, limit)

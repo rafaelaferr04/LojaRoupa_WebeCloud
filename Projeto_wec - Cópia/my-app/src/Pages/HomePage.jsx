@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Footer from '../Footer.jsx'
 import Header from '../Header.jsx'
@@ -6,11 +6,26 @@ import ProductGrid from '../components/ProductGrid.jsx'
 import { useStore } from '../context/StoreContext.jsx'
 import { categoryPages, getTopWeeklyProducts, products } from '../data/storeData.js'
 
+function getFeaturedLimit() {
+  return window.innerWidth > 1080 ? 8 : 6
+}
+
 function HomePage() {
   const { withSalesData } = useStore()
+  const [featuredLimit, setFeaturedLimit] = useState(() => getFeaturedLimit())
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
+
+  useEffect(() => {
+    function handleResize() {
+      setFeaturedLimit(getFeaturedLimit())
+    }
+
+    window.addEventListener('resize', handleResize)
+
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   function getSection(categoryKey, sectionTitle) {
@@ -44,7 +59,7 @@ function HomePage() {
     ...categoryPages.casa.sections[0].products.slice(0, 2),
   ]
   const featuredProducts = getTopWeeklyProducts(
-    8,
+    featuredLimit,
     withSalesData(products),
     fallbackFeaturedProducts,
   )
