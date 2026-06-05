@@ -25,6 +25,21 @@ client = MongoClient(
 )
 db = client[database_name]
 
+campanhas_saldos = {
+    2: 30,
+    8: 50,
+    15: 30,
+    23: 50,
+    35: 30,
+    48: 50,
+    62: 30,
+    74: 50,
+    91: 30,
+    108: 50,
+    126: 30,
+    142: 50,
+}
+
 
 def load_json(filename):
     path = DATA_DIR / filename
@@ -38,6 +53,55 @@ def add_timestamps(document):
     document.setdefault("createdAt", now)
     document["updatedAt"] = now
     return document
+
+
+def convert_product(product):
+    discount = campanhas_saldos.get(product["id"])
+    final_price = product["preco"]
+    old_price = None
+    sale_campaign = None
+
+    if discount:
+        final_price = round(product["preco"] * (1 - discount / 100))
+        old_price = f'{product["preco"]} EUR'
+        sale_campaign = f"Até {discount}%"
+
+    document = {
+        "id": product["id"],
+        "name": product["title"],
+        "categoryKey": product["categoriaKey"],
+        "category": product["categoria"],
+        "subcategoryGroup": product["grupo"],
+        "subcategory": product["subcategoria"],
+        "type": product["tipo"],
+        "color": product["cor"],
+        "price": f"{final_price} EUR",
+        "priceValue": final_price,
+        "oldPrice": old_price,
+        "saleCampaign": sale_campaign,
+        "description": product["descricao"],
+        "materials": product.get("materiais"),
+        "sizes": product.get("tamanhosValidos", []),
+        "image": product["imagem"],
+        "imageAlt": product["title"],
+        "badge": "Saldos" if discount else product.get("destaque"),
+        "totalSales": 0,
+        "weeklySales": 0,
+    }
+
+    return add_timestamps(document)
+
+
+def import_products():
+    products = load_json("productsData.json")
+    documents = [convert_product(product) for product in products]
+
+    db.products.delete_many({})
+
+    if documents:
+        db.products.insert_many(documents)
+
+    return len(documents)
 
 
 def import_users():
@@ -76,5 +140,6 @@ def import_orders():
     return imported
 
 
+print(f"Products importados/atualizados: {import_products()}")
 print(f"Users importados/atualizados: {import_users()}")
 print(f"Orders importadas/atualizadas: {import_orders()}")
