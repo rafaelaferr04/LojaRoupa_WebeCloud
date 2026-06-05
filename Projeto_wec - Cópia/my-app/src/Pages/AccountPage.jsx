@@ -46,6 +46,7 @@ function AccountPage() {
   const [error, setError] = useState(location.state?.error ?? '')
   const [returnMessage, setReturnMessage] = useState('')
   const [newsletterMessage, setNewsletterMessage] = useState('')
+  const [isAuthSubmitting, setIsAuthSubmitting] = useState(false)
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -54,15 +55,18 @@ function AccountPage() {
   async function handleSubmit(event) {
     event.preventDefault()
     setError('')
+    setIsAuthSubmitting(true)
 
     if (isRegister) {
       if (password.length < 6) {
         setError('A palavra-passe deve ter pelo menos 6 caracteres.')
+        setIsAuthSubmitting(false)
         return
       }
 
       if (password !== confirmPassword) {
         setError('As palavras-passe não coincidem.')
+        setIsAuthSubmitting(false)
         return
       }
 
@@ -72,6 +76,7 @@ function AccountPage() {
         setError(result.error)
       }
 
+      setIsAuthSubmitting(false)
       return
     }
 
@@ -80,11 +85,14 @@ function AccountPage() {
     if (!result.ok) {
       setError(result.error)
     }
+
+    setIsAuthSubmitting(false)
   }
 
   function handleLogout() {
     logout()
-    navigate('/')
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    navigate('/', { replace: true })
   }
 
   async function handleReturnRequest(orderId, itemKey) {
@@ -270,6 +278,7 @@ function AccountPage() {
               <button
                 type="button"
                 className={!isRegister ? 'auth-tab is-active' : 'auth-tab'}
+                disabled={isAuthSubmitting}
                 onClick={() => {
                   setIsRegister(false)
                   setError('')
@@ -280,6 +289,7 @@ function AccountPage() {
               <button
                 type="button"
                 className={isRegister ? 'auth-tab is-active' : 'auth-tab'}
+                disabled={isAuthSubmitting}
                 onClick={() => {
                   setIsRegister(true)
                   setError('')
@@ -347,8 +357,8 @@ function AccountPage() {
 
               {error && <p className="auth-error">{error}</p>}
 
-              <button type="submit" className="auth-submit auth-submit--login">
-                {isRegister ? 'Registar' : 'Entrar'}
+              <button type="submit" className="auth-submit auth-submit--login" disabled={isAuthSubmitting}>
+                {isAuthSubmitting ? (isRegister ? 'A criar' : 'A entrar') : (isRegister ? 'Registar' : 'Entrar')}
               </button>
             </form>
           </div>

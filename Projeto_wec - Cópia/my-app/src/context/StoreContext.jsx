@@ -78,6 +78,7 @@ export function StoreProvider({ children }) {
   const [guestCart, setGuestCart] = useState([])
 
   const currentUser = users.find((storedUser) => storedUser.email === user) ?? null
+  const currentUserEmail = currentUser?.email
   const cart = currentUser?.cart ?? guestCart
   const favorites = currentUser?.favorites ?? []
 
@@ -119,13 +120,13 @@ export function StoreProvider({ children }) {
 
   useEffect(() => {
     async function loadOrders() {
-      if (!currentUser) {
+      if (!currentUserEmail) {
         setOrders([])
         return
       }
 
       try {
-        const apiOrders = await apiRequest(`/orders?userEmail=${encodeURIComponent(currentUser.email)}`)
+        const apiOrders = await apiRequest(`/orders?userEmail=${encodeURIComponent(currentUserEmail)}`)
         setOrders(Array.isArray(apiOrders) ? sortOrdersByDate(apiOrders) : [])
       } catch {
         setOrders([])
@@ -133,7 +134,7 @@ export function StoreProvider({ children }) {
     }
 
     loadOrders()
-  }, [currentUser?.email])
+  }, [currentUserEmail])
 
   useEffect(() => {
     if (user) {
@@ -199,8 +200,13 @@ export function StoreProvider({ children }) {
       setUser(normalizedEmail)
 
       return { ok: true }
-    } catch {
-      return { ok: false, error: 'Nao foi possivel criar a conta.' }
+    } catch (error) {
+      return {
+        ok: false,
+        error: error.message.includes('Utilizador ja existe')
+          ? 'Este utilizador já existe.'
+          : 'Não foi possível criar a conta.',
+      }
     }
   }
 

@@ -1,14 +1,10 @@
-import { useEffect } from 'react'
+import { useLayoutEffect } from 'react'
 import Footer from '../Footer.jsx'
 import Header from '../Header.jsx'
 
 function InfoPage({ page }) {
-  useEffect(() => {
-    const scrollFrame = requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-    })
-
-    return () => cancelAnimationFrame(scrollFrame)
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
   }, [page.path])
 
   return (

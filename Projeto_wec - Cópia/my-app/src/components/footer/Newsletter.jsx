@@ -9,12 +9,7 @@ function Newsletter() {
   const [status, setStatus] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isHidden, setIsHidden] = useState(false)
-
-  useEffect(() => {
-    if (currentUser?.email) {
-      setEmail(currentUser.email)
-    }
-  }, [currentUser?.email])
+  const newsletterEmail = currentUser?.email ?? email
 
   useEffect(() => {
     if (!status) {
@@ -72,7 +67,7 @@ function Newsletter() {
         <input
           type="email"
           placeholder="Endereço de email"
-          value={email}
+          value={newsletterEmail}
           onChange={(event) => setEmail(event.target.value)}
           readOnly={Boolean(currentUser)}
           required

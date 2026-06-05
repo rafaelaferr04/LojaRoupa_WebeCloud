@@ -47,6 +47,40 @@ Atentamente,
 Equipa Atelier WEC"""
 
 
+def build_order_message(order):
+    order_id = order.get("id", "sem referência")
+    try:
+        total = float(order.get("total", 0))
+    except (TypeError, ValueError):
+        total = 0
+    items = order.get("items", [])
+    item_lines = []
+
+    for item in items:
+        quantity = item.get("quantity", 1)
+        name = item.get("name", "Produto")
+        size = item.get("size")
+        price = item.get("price", "")
+        size_text = f", tamanho {size}" if size else ""
+        item_lines.append(f"- {quantity} x {name}{size_text} {price}".strip())
+
+    products_text = "\n".join(item_lines) if item_lines else "- Produtos da encomenda"
+
+    return f"""Agradecemos a sua compra no Atelier WEC.
+
+Recebemos a sua encomenda {order_id} e vamos preparar os seus artigos com o maior cuidado.
+
+Resumo da encomenda:
+{products_text}
+
+Total: {total:.2f} EUR
+
+Assim que a encomenda for enviada, receberá novas informações de acompanhamento.
+
+Atentamente,
+Equipa Atelier WEC"""
+
+
 def json_error(message, status_code):
     return jsonify({"error": message}), status_code
 
@@ -98,7 +132,7 @@ def send_email(to_email, subject, body):
     message.set_content(body)
 
     try:
-        with smtplib.SMTP(smtp_host, smtp_port) as server:
+        with smtplib.SMTP(smtp_host, smtp_port, timeout=10) as server:
             server.starttls()
             server.login(smtp_user, smtp_password)
             server.send_message(message)
@@ -854,7 +888,38 @@ def get_user(user_id):
 
 @app.route("/users", methods=["POST"])
 def create_user():
-    return create_document("users")
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
+        return json_error("O corpo do pedido deve ser um objeto JSON.", 400)
+
+    email = (data.get("email") or "").strip().lower()
+
+    if not is_valid_email(email):
+        return json_error("Email invalido.", 400)
+
+    data["email"] = email
+    data["username"] = (data.get("username") or email).strip().lower()
+    data.setdefault("confirmed", True)
+    data.setdefault("role", "user")
+    data.setdefault("newsletterSubscribed", False)
+    data.setdefault("cart", [])
+    data.setdefault("favorites", [])
+    data["createdAt"] = now_utc()
+    data["updatedAt"] = now_utc()
+
+    try:
+        existing_user = db.users.find_one({"email": email})
+
+        if existing_user:
+            return json_error("Utilizador ja existe.", 409)
+
+        result = db.users.insert_one(data)
+        document = db.users.find_one({"_id": result.inserted_id})
+    except PyMongoError as error:
+        return json_error(str(error), 500)
+
+    return jsonify(serialize_document(document)), 201
 
 
 @app.route("/users/<user_id>", methods=["PUT", "PATCH"])
@@ -885,7 +950,35 @@ def get_order(order_id):
 
 @app.route("/orders", methods=["POST"])
 def create_order():
-    return create_document("orders")
+    data = request.get_json(silent=True)
+
+    if not isinstance(data, dict):
+        return json_error("O corpo do pedido deve ser um objeto JSON.", 400)
+
+    email = (data.get("userEmail") or data.get("email") or "").strip().lower()
+
+    if not is_valid_email(email):
+        return json_error("Email invalido.", 400)
+
+    sent, send_error = send_email(
+        email,
+        "Confirmação da encomenda Atelier WEC",
+        build_order_message(data),
+    )
+
+    data["userEmail"] = email
+    data["emailSent"] = sent
+    data["emailError"] = send_error
+    data["createdAt"] = now_utc()
+    data["updatedAt"] = now_utc()
+
+    try:
+        result = db.orders.insert_one(data)
+        document = db.orders.find_one({"_id": result.inserted_id})
+    except PyMongoError as error:
+        return json_error(str(error), 500)
+
+    return jsonify(serialize_document(document)), 201
 
 
 @app.route("/orders/<order_id>", methods=["PUT", "PATCH"])
