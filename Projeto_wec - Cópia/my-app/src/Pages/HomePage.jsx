@@ -54,8 +54,8 @@ function HomePage() {
   ].filter((collection) => collection.section)
 
   const fallbackFeaturedProducts = [
-    ...categoryPages.mulher.sections[0].products.slice(0, 2),
-    ...categoryPages.homem.sections[0].products.slice(2, 4),
+    ...categoryPages.mulher.sections[0].products.slice(0, 3),
+    ...categoryPages.homem.sections[0].products.slice(3, 6),
     ...categoryPages.casa.sections[0].products.slice(0, 2),
   ]
   const featuredProducts = getTopWeeklyProducts(
