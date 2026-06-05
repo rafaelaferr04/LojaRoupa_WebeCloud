@@ -99,7 +99,11 @@ function AccountPage() {
     const result = await requestReturn({ orderId, itemKey })
 
     if (result.ok) {
-      setReturnMessage(`Pedido de devolução registado. Enviámos as instruções para ${currentUser.email}.`)
+      setReturnMessage(
+        result.emailSent
+          ? `Pedido de devolução registado. Enviámos as instruções para ${currentUser.email}.`
+          : 'Pedido de devolução registado, mas não foi possível enviar o email. Verifique a configuração SMTP do backend.',
+      )
     }
   }
 

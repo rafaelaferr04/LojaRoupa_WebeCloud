@@ -7,6 +7,7 @@ import { useStore } from '../context/StoreContext.jsx'
 function CheckoutPage() {
   const { cart, cartCount, clearCart, currentUser, placeOrder } = useStore()
   const [orderFinished, setOrderFinished] = useState(false)
+  const [confirmationEmailSent, setConfirmationEmailSent] = useState(null)
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' })
@@ -34,9 +35,11 @@ function CheckoutPage() {
     event.preventDefault()
 
     if (currentUser) {
-      await placeOrder({ items: cart, total })
+      const savedOrder = await placeOrder({ items: cart, total })
+      setConfirmationEmailSent(Boolean(savedOrder?.emailSent))
     } else {
       clearCart()
+      setConfirmationEmailSent(false)
     }
 
     setOrderFinished(true)
@@ -51,7 +54,11 @@ function CheckoutPage() {
           <section className="category-hero">
             <p>Compra finalizada</p>
             <h1>Obrigado pela sua encomenda</h1>
-            <span>Enviamos a confirmação e os detalhes de acompanhamento para o seu email.</span>
+            <span>
+              {confirmationEmailSent
+                ? 'Enviámos a confirmação e os detalhes da encomenda para o seu email.'
+                : 'A encomenda foi registada, mas não foi possível enviar o email de confirmação.'}
+            </span>
           </section>
           <section className="empty-cart checkout-confirmation">
             <h2>Encomenda recebida</h2>
