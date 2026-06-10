@@ -275,11 +275,16 @@ export function StoreProvider({ children }) {
       })
 
       setOrders((currentOrders) => sortOrdersByDate([savedOrder, ...currentOrders]))
+      return savedOrder
     } catch {
-      setOrders((currentOrders) => sortOrdersByDate([order, ...currentOrders]))
+      const unsavedOrder = {
+        ...order,
+        emailSent: false,
+        emailError: 'Não foi possível comunicar com o backend.',
+      }
+      setOrders((currentOrders) => sortOrdersByDate([unsavedOrder, ...currentOrders]))
+      return unsavedOrder
     }
-
-    return order
   }
 
   async function requestReturn({ orderId, itemKey }) {
@@ -314,7 +319,7 @@ export function StoreProvider({ children }) {
       })
     }
 
-    await apiRequest('/api/v1/returns', {
+    const savedReturn = await apiRequest('/api/v1/returns', {
       method: 'POST',
       body: JSON.stringify({
         userEmail: currentUser.email,
@@ -325,7 +330,11 @@ export function StoreProvider({ children }) {
       }),
     })
 
-    return { ok: true }
+    return {
+      ok: true,
+      emailSent: Boolean(savedReturn.emailSent),
+      emailError: savedReturn.emailError,
+    }
   }
 
   async function subscribeNewsletter() {
