@@ -1287,6 +1287,16 @@
   padding: 12px 14px;
 }
 
+.auth-success {
+  background: rgba(92, 168, 92, 0.1);
+  border: 1px solid rgba(92, 168, 92, 0.3);
+  color: #3a7d3a;
+  font-size: 0.86rem;
+  line-height: 1.5;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+}
+
 .account-field-row {
   border-bottom: 1px solid #e0d5c4;
   display: flex;

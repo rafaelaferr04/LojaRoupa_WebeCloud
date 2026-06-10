@@ -4,7 +4,6 @@ import { products } from '../data/storeData.js'
 
 const StoreContext = createContext(null)
 
-const sessionKey = 'atelier-wec-session'
 const apiUrl = import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:5000'
 
 function readStorage(key, fallback) {
@@ -25,7 +24,6 @@ function normalizeUser(user) {
     username: user.username,
     name: user.name || user.email,
     email: normalizeEmail(user.email),
-    password: user.password,
     confirmed: user.confirmed,
     role: user.role,
     newsletterSubscribed: Boolean(user.newsletterSubscribed),
@@ -71,29 +69,15 @@ export function useStore() {
 }
 
 export function StoreProvider({ children }) {
-  const [users, setUsers] = useState([])
   const [orders, setOrders] = useState([])
   const [productSales, setProductSales] = useState({})
-  const [user, setUser] = useState(() => readStorage(sessionKey, null))
+  const [currentUser, setCurrentUser] = useState(() => readStorage('atelier-wec-user', null))
+  const [token, setToken] = useState(() => readStorage('atelier-wec-token', null))
   const [guestCart, setGuestCart] = useState([])
 
-  const currentUser = users.find((storedUser) => storedUser.email === user) ?? null
   const currentUserEmail = currentUser?.email
   const cart = currentUser?.cart ?? guestCart
   const favorites = currentUser?.favorites ?? []
-
-  useEffect(() => {
-    async function loadUsers() {
-      try {
-        const apiUsers = await apiRequest('/users')
-        setUsers(Array.isArray(apiUsers) ? apiUsers.map(normalizeUser) : [])
-      } catch {
-        setUsers([])
-      }
-    }
-
-    loadUsers()
-  }, [])
 
   useEffect(() => {
     async function loadProductSales() {
@@ -108,7 +92,6 @@ export function StoreProvider({ children }) {
             },
           ]),
         )
-
         setProductSales(nextSales)
       } catch {
         setProductSales({})
@@ -137,96 +120,62 @@ export function StoreProvider({ children }) {
   }, [currentUserEmail])
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem(sessionKey, JSON.stringify(user))
-      return
-    }
+    if (currentUser) localStorage.setItem('atelier-wec-user', JSON.stringify(currentUser))
+    else localStorage.removeItem('atelier-wec-user')
+  }, [currentUser])
 
-    localStorage.removeItem(sessionKey)
-  }, [user])
+  useEffect(() => {
+    if (token) localStorage.setItem('atelier-wec-token', token)
+    else localStorage.removeItem('atelier-wec-token')
+  }, [token])
 
   async function updateUser(email, updates) {
-    const storedUser = users.find((candidate) => candidate.email === email)
-
-    if (!storedUser?._id) {
-      return null
-    }
-
-    const userToSave = normalizeUser({ ...storedUser, ...updates(storedUser) })
-
-    setUsers((currentUsers) =>
-      currentUsers.map((candidate) =>
-        candidate.email === email ? userToSave : candidate,
-      ),
-    )
-
+    if (!currentUser?._id) return null
+    const userToSave = normalizeUser({ ...currentUser, ...updates(currentUser) })
+    setCurrentUser(userToSave)
     const savedUser = await apiRequest(`/users/${userToSave._id}`, {
       method: 'PATCH',
       body: JSON.stringify(userToSave),
     })
-
-    const normalizedUser = normalizeUser(savedUser)
-
-    setUsers((currentUsers) =>
-      currentUsers.map((storedUser) =>
-        storedUser.email === email ? normalizedUser : storedUser,
-      ),
-    )
-
-    return normalizedUser
+    const normalized = normalizeUser(savedUser)
+    setCurrentUser(normalized)
+    return normalized
   }
 
   async function register({ name, email, password }) {
-    const normalizedEmail = normalizeEmail(email)
-
-    if (users.some((storedUser) => storedUser.email === normalizedEmail)) {
-      return { ok: false, error: 'Este utilizador ja existe.' }
-    }
-
     try {
-      const createdUser = await apiRequest('/users', {
+      await apiRequest('/api/v1/user/signup', {
         method: 'POST',
-        body: JSON.stringify({
-          name: name.trim(),
-          email: normalizedEmail,
-          password,
-          newsletterSubscribed: false,
-          cart: [],
-          favorites: [],
-        }),
+        body: JSON.stringify({ name: name.trim(), email: normalizeEmail(email), password }),
       })
-
-      setUsers((currentUsers) => [...currentUsers, normalizeUser(createdUser)])
-      setUser(normalizedEmail)
-
       return { ok: true }
     } catch (error) {
-      return {
-        ok: false,
-        error: error.message.includes('Utilizador ja existe')
-          ? 'Este utilizador já existe.'
-          : 'Não foi possível criar a conta.',
-      }
+      return { ok: false, error: 'Não foi possível criar a conta.' }
     }
   }
 
   async function login(email, password) {
-    const normalizedEmail = normalizeEmail(email)
-    const storedUser = users.find(
-      (candidate) => candidate.email === normalizedEmail && candidate.password === password,
-    )
-
-    if (!storedUser) {
-      return { ok: false, error: 'Credenciais invalidas.' }
+    try {
+      const result = await apiRequest('/api/v1/user/login', {
+        method: 'POST',
+        body: JSON.stringify({ email: normalizeEmail(email), password }),
+      })
+      setToken(result.token)
+      setCurrentUser(normalizeUser(result.user))
+      return { ok: true }
+    } catch (error) {
+      let message = 'Credenciais inválidas.'
+      try {
+        const parsed = JSON.parse(error.message)
+        if (parsed.error) message = parsed.error
+      } catch {}
+      return { ok: false, error: message }
     }
-
-    setUser(normalizedEmail)
-
-    return { ok: true }
   }
 
   function logout() {
-    setUser(null)
+    setCurrentUser(null)
+    setToken(null)
   }
 
   function saveCart(nextCart) {
@@ -441,7 +390,6 @@ export function StoreProvider({ children }) {
   const favoriteProducts = withSalesData(products).filter((product) => favorites.includes(product.id))
 
   const value = {
-    user,
     currentUser,
     orders,
     login,

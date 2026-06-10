@@ -44,6 +44,7 @@ function AccountPage() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState(location.state?.error ?? '')
+  const [successMessage, setSuccessMessage] = useState('')
   const [returnMessage, setReturnMessage] = useState('')
   const [newsletterMessage, setNewsletterMessage] = useState('')
   const [isAuthSubmitting, setIsAuthSubmitting] = useState(false)
@@ -74,8 +75,15 @@ function AccountPage() {
 
       if (!result.ok) {
         setError(result.error)
+        setIsAuthSubmitting(false)
+        return
       }
 
+      setName('')
+      setPassword('')
+      setConfirmPassword('')
+      setIsRegister(false)
+      setSuccessMessage('Conta criada com sucesso. Assim que a conta for aprovada poderá iniciar sessão.')
       setIsAuthSubmitting(false)
       return
     }
@@ -282,6 +290,7 @@ function AccountPage() {
                 onClick={() => {
                   setIsRegister(false)
                   setError('')
+                  setSuccessMessage('')
                 }}
               >
                 Entrar
@@ -293,6 +302,7 @@ function AccountPage() {
                 onClick={() => {
                   setIsRegister(true)
                   setError('')
+                  setSuccessMessage('')
                 }}
               >
                 Registar
@@ -355,6 +365,7 @@ function AccountPage() {
                 </label>
               )}
 
+              {successMessage && <p className="auth-success">{successMessage}</p>}
               {error && <p className="auth-error">{error}</p>}
 
               <button type="submit" className="auth-submit auth-submit--login" disabled={isAuthSubmitting}>
