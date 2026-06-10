@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
-import { products } from '../data/storeData.js'
+import { normalizeApiProduct } from '../data/storeData.js'
 
 const StoreContext = createContext(null)
 
@@ -48,9 +48,11 @@ function sortOrdersByDate(ordersToSort) {
 }
 
 async function apiRequest(path, options = {}) {
+  const token = (() => { try { return JSON.parse(localStorage.getItem('atelier-wec-token')) } catch { return null } })()
   const response = await fetch(`${apiUrl}${path}`, {
     headers: {
       'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers ?? {}),
     },
     ...options,
@@ -70,6 +72,7 @@ export function useStore() {
 
 export function StoreProvider({ children }) {
   const [orders, setOrders] = useState([])
+  const [products, setProducts] = useState([])
   const [productSales, setProductSales] = useState({})
   const [currentUser, setCurrentUser] = useState(() => readStorage('atelier-wec-user', null))
   const [token, setToken] = useState(() => readStorage('atelier-wec-token', null))
@@ -80,19 +83,30 @@ export function StoreProvider({ children }) {
   const favorites = currentUser?.favorites ?? []
 
   useEffect(() => {
+    async function loadProducts() {
+      try {
+        const data = await apiRequest('/api/v1/products?limit=1000')
+        const normalized = (data.products ?? []).map(normalizeApiProduct)
+        setProducts(normalized)
+      } catch {
+        setProducts([])
+      }
+    }
+
+    loadProducts()
+  }, [])
+
+  useEffect(() => {
     async function loadProductSales() {
       try {
         const apiSales = await apiRequest('/api/v1/products/sales')
-        const nextSales = Object.fromEntries(
+        const salesMap = Object.fromEntries(
           apiSales.map((sale) => [
             String(sale.productId),
-            {
-              totalSales: sale.totalSales ?? 0,
-              weeklySales: sale.weeklySales ?? 0,
-            },
+            { totalSales: sale.totalSales ?? 0, weeklySales: sale.weeklySales ?? 0 },
           ]),
         )
-        setProductSales(nextSales)
+        setProductSales(salesMap)
       } catch {
         setProductSales({})
       }
@@ -381,16 +395,17 @@ export function StoreProvider({ children }) {
   const withSalesData = useCallback((productsToRead) => {
     return productsToRead.map((product) => ({
       ...product,
-      totalSales: productSales[product.id]?.totalSales ?? 0,
-      weeklySales: productSales[product.id]?.weeklySales ?? 0,
+      totalSales: productSales[String(product.id)]?.totalSales ?? product.totalSales ?? 0,
+      weeklySales: productSales[String(product.id)]?.weeklySales ?? product.weeklySales ?? 0,
     }))
   }, [productSales])
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0)
-  const favoriteProducts = withSalesData(products).filter((product) => favorites.includes(product.id))
+  const favoriteProducts = withSalesData(products).filter((product) => favorites.includes(String(product.id)))
 
   const value = {
     currentUser,
+    products,
     orders,
     login,
     register,

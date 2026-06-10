@@ -4,14 +4,15 @@ import Footer from '../Footer.jsx'
 import Header from '../Header.jsx'
 import ProductGrid from '../components/ProductGrid.jsx'
 import { useStore } from '../context/StoreContext.jsx'
-import { categoryPages, getTopWeeklyProducts, products } from '../data/storeData.js'
+import { buildCategoryPages, getTopWeeklyProducts } from '../data/storeData.js'
 
 function getFeaturedLimit() {
   return window.innerWidth > 1080 ? 8 : 6
 }
 
 function HomePage() {
-  const { withSalesData } = useStore()
+  const { products, withSalesData } = useStore()
+  const categoryPages = buildCategoryPages(products)
   const [featuredLimit, setFeaturedLimit] = useState(() => getFeaturedLimit())
 
   useEffect(() => {
@@ -54,9 +55,9 @@ function HomePage() {
   ].filter((collection) => collection.section)
 
   const fallbackFeaturedProducts = [
-    ...categoryPages.mulher.sections[0].products.slice(0, 3),
-    ...categoryPages.homem.sections[0].products.slice(3, 6),
-    ...categoryPages.casa.sections[0].products.slice(0, 2),
+    ...(categoryPages.mulher?.sections[0]?.products ?? []).slice(0, 3),
+    ...(categoryPages.homem?.sections[0]?.products ?? []).slice(3, 6),
+    ...(categoryPages.casa?.sections[0]?.products ?? []).slice(0, 2),
   ]
   const featuredProducts = getTopWeeklyProducts(
     featuredLimit,

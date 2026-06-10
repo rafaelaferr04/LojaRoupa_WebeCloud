@@ -147,7 +147,7 @@ def send_email(to_email, subject, body):
 def get_pagination():
     try:
         page = max(int(request.args.get("page", 1)), 1)
-        limit = min(max(int(request.args.get("limit", 10)), 1), 100)
+        limit = min(max(int(request.args.get("limit", 10)), 1), 1000)
     except ValueError:
         page = 1
         limit = 10
@@ -850,86 +850,9 @@ def api_create_return_request():
     return jsonify(serialize_document(saved_return)), 201
 
 
-# Rotas antigas mantidas para a app React atual.
-@app.route("/products", methods=["GET"])
-def get_products():
-    return collection_response("products", build_product_query())
-
-
-@app.route("/products/<product_id>", methods=["GET"])
-def get_product(product_id):
-    return single_document_response("products", product_id)
-
-
-@app.route("/products", methods=["POST"])
-def create_product():
-    return create_document("products")
-
-
-@app.route("/products/<product_id>", methods=["PUT", "PATCH"])
-def update_product(product_id):
-    return update_document("products", product_id)
-
-
-@app.route("/products/<product_id>", methods=["DELETE"])
-def delete_product(product_id):
-    return delete_document("products", product_id)
-
-
-@app.route("/users", methods=["GET"])
-def get_users():
-    return collection_response("users")
-
-
-@app.route("/users/<user_id>", methods=["GET"])
-def get_user(user_id):
-    return single_document_response("users", user_id)
-
-
-@app.route("/users", methods=["POST"])
-def create_user():
-    data = request.get_json(silent=True)
-
-    if not isinstance(data, dict):
-        return json_error("O corpo do pedido deve ser um objeto JSON.", 400)
-
-    email = (data.get("email") or "").strip().lower()
-
-    if not is_valid_email(email):
-        return json_error("Email invalido.", 400)
-
-    data["email"] = email
-    data["username"] = (data.get("username") or email).strip().lower()
-    data.setdefault("confirmed", True)
-    data.setdefault("role", "user")
-    data.setdefault("newsletterSubscribed", False)
-    data.setdefault("cart", [])
-    data.setdefault("favorites", [])
-    data["createdAt"] = now_utc()
-    data["updatedAt"] = now_utc()
-
-    try:
-        existing_user = db.users.find_one({"email": email})
-
-        if existing_user:
-            return json_error("Utilizador ja existe.", 409)
-
-        result = db.users.insert_one(data)
-        document = db.users.find_one({"_id": result.inserted_id})
-    except PyMongoError as error:
-        return json_error(str(error), 500)
-
-    return jsonify(serialize_document(document)), 201
-
-
 @app.route("/users/<user_id>", methods=["PUT", "PATCH"])
 def update_user(user_id):
     return update_document("users", user_id)
-
-
-@app.route("/users/<user_id>", methods=["DELETE"])
-def delete_user(user_id):
-    return delete_document("users", user_id)
 
 
 @app.route("/orders", methods=["GET"])

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Footer from '../Footer.jsx'
 import Header from '../Header.jsx'
 import ProductGrid from '../components/ProductGrid.jsx'
-import { products } from '../data/storeData.js'
+import { useStore } from '../context/StoreContext.jsx'
 
 function searchProducts(productsToSearch, query) {
   const normalizedQuery = query.trim().toLowerCase()
@@ -26,6 +26,7 @@ function searchProducts(productsToSearch, query) {
 }
 
 function SearchPage() {
+  const { products } = useStore()
   const [query, setQuery] = useState('')
 
   useEffect(() => {
@@ -34,7 +35,7 @@ function SearchPage() {
 
   const filteredProducts = useMemo(() => {
     return searchProducts(products, query)
-  }, [query])
+  }, [products, query])
 
   return (
     <>
