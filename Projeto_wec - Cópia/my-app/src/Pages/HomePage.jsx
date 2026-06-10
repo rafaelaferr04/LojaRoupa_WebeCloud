@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Footer from '../Footer.jsx'
 import Header from '../Header.jsx'
@@ -12,7 +12,7 @@ function getFeaturedLimit() {
 
 function HomePage() {
   const { products, withSalesData } = useStore()
-  const categoryPages = buildCategoryPages(products)
+  const categoryPages = useMemo(() => buildCategoryPages(products), [products])
   const [featuredLimit, setFeaturedLimit] = useState(() => getFeaturedLimit())
 
   useEffect(() => {

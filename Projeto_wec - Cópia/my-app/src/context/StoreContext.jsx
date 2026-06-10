@@ -143,7 +143,7 @@ export function StoreProvider({ children }) {
     else localStorage.removeItem('atelier-wec-token')
   }, [token])
 
-  async function updateUser(email, updates) {
+  async function updateUser(updates) {
     if (!currentUser?._id) return null
     const userToSave = normalizeUser({ ...currentUser, ...updates(currentUser) })
     setCurrentUser(userToSave)
@@ -194,7 +194,7 @@ export function StoreProvider({ children }) {
 
   function saveCart(nextCart) {
     if (currentUser) {
-      updateUser(currentUser.email, () => ({ cart: nextCart }))
+      updateUser(() => ({ cart: nextCart }))
       return
     }
 
@@ -266,7 +266,7 @@ export function StoreProvider({ children }) {
       })),
     }
 
-    await updateUser(currentUser.email, () => ({ cart: [] }))
+    await updateUser(() => ({ cart: [] }))
 
     try {
       const savedOrder = await apiRequest('/orders', {
@@ -342,7 +342,7 @@ export function StoreProvider({ children }) {
         body: JSON.stringify({ email: currentUser.email }),
       })
 
-      await updateUser(currentUser.email, () => ({ newsletterSubscribed: true }))
+      await updateUser(() => ({ newsletterSubscribed: true }))
 
       return { ok: true, emailSent: result.emailSent }
     } catch {
@@ -361,7 +361,7 @@ export function StoreProvider({ children }) {
         body: JSON.stringify({ email: currentUser.email }),
       })
 
-      await updateUser(currentUser.email, () => ({ newsletterSubscribed: false }))
+      await updateUser(() => ({ newsletterSubscribed: false }))
 
       return { ok: true }
     } catch {
@@ -381,14 +381,14 @@ export function StoreProvider({ children }) {
       ? favorites.filter((id) => id !== productId)
       : [...favorites, productId]
 
-    await updateUser(currentUser.email, () => ({ favorites: nextFavorites }))
+    await updateUser(() => ({ favorites: nextFavorites }))
 
     return { ok: true }
   }
 
   function clearFavorites() {
     if (currentUser) {
-      updateUser(currentUser.email, () => ({ favorites: [] }))
+      updateUser(() => ({ favorites: [] }))
     }
   }
 
@@ -424,7 +424,7 @@ export function StoreProvider({ children }) {
     favorites,
     favoriteCount: favorites.length,
     favoriteProducts,
-    isFavorite: (productId) => favorites.includes(productId),
+    isFavorite: (productId) => favorites.includes(String(productId)),
     toggleFavorite,
     clearFavorites,
   }
